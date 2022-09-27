@@ -41,7 +41,6 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler {
             }
             "printReyFinish" -> {
                 try {
-                    printerObject?.printQrCode(null,"this is data")
                     printerObject?.printReyFinish()
                     result.success("success !")
                 } catch (e: Exception) {
@@ -76,7 +75,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler {
                     try {
                         printerObject?.printReyBitmap("${call.arguments}")
                         printerObject?.printRey("\n")
-                        result.success("success ! ${call.arguments}")
+                        result.success("success ! ")
                     } catch (e: Exception) {
                         result.success("${e.message}");
                     }
