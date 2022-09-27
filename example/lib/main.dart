@@ -1,5 +1,4 @@
 import 'package:all_printer/models/InvoiceListModel.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -131,10 +130,10 @@ class _MyAppState extends State<MyApp> {
         //     onPressed: () => initPlatformState(),
         //     child: const Icon(Icons.print)),
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Center(

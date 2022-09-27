@@ -88,84 +88,92 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler {
 
                 try {
 
-                    print("${call.arguments}")
+
                     result.success("printer device Name : none")
 
-                    val text = call.argument<String>("text")
-                    val date = call.argument<String>("date")
-                    val name = call.argument<String>("name")
-                    val merchent = call.argument<String>("merchent")
-                    val terminal = call.argument<String>("terminal")
-                    val transaction = call.argument<String>("transaction")
-                    val voucher = call.argument<String>("voucher")
-                    val car = call.argument<String>("car")
-                    val customer = call.argument<String>("customer")
-                    val star1 = call.argument<String>("star1")
-                    val title = call.argument<String>("title")
-                    val star2 = call.argument<String>("star2")
-                    val product = call.argument<String>("product")
-                    val service = call.argument<String>("service")
-                    val price = call.argument<String>("price")
-                    val qty = call.argument<String>("qty")
-                    val tqty = call.argument<String>("tqty")
-                    val totalbeforvat = call.argument<String>("totalbeforvat")
-                    val vat = call.argument<String>("vat")
-                    val star3 = call.argument<String>("star3")
-                    val total = call.argument<String>("total")
-                    val star4 = call.argument<String>("star4")
-                    val address = call.argument<String>("address")
-                    val footer = call.argument<String>("footer")
+                    val hashMap = call.arguments as HashMap<*,*>
+
+
+
+//                    val text = call.argument<String>("text")
+//                    val date = call.argument<String>("date")
+//                    val name = call.argument<String>("name")
+//                    val merchent = call.argument<String>("merchent")
+//                    val terminal = call.argument<String>("terminal")
+//                    val transaction = call.argument<String>("transaction")
+//                    val voucher = call.argument<String>("voucher")
+//                    val car = call.argument<String>("car")
+//                    val customer = call.argument<String>("customer")
+//                    val star1 = call.argument<String>("star1")
+//                    val title = call.argument<String>("title")
+//                    val star2 = call.argument<String>("star2")
+//                    val product = call.argument<String>("product")
+//                    val service = call.argument<String>("service")
+//                    val price = call.argument<String>("price")
+//                    val qty = call.argument<String>("qty")
+//                    val tqty = call.argument<String>("tqty")
+//                    val totalbeforvat = call.argument<String>("totalbeforvat")
+//                    val vat = call.argument<String>("vat")
+//                    val star3 = call.argument<String>("star3")
+//                    val total = call.argument<String>("total")
+//                    val star4 = call.argument<String>("star4")
+//                    val address = call.argument<String>("address")
+//                    val footer = call.argument<String>("footer")
                     val logoPath = call.argument<String>("logoPath")
 
-                    var loremX500 = text + ""
-                    loremX500 += date
-                    loremX500 += "\n"
-                    loremX500 += name
-                    loremX500 += "\n"
-                    loremX500 += merchent
-                    loremX500 += "\n"
-                    loremX500 += terminal
-                    loremX500 += "\n"
-                    loremX500 += transaction
-                    loremX500 += "\n"
-                    loremX500 += voucher
-                    loremX500 += "\n"
-                    loremX500 += car
-                    loremX500 += "\n"
-                    loremX500 += customer
-                    loremX500 += "\n"
-                    loremX500 += star1
-                    loremX500 += "\n"
-                    loremX500 += title
-                    loremX500 += "\n"
-                    loremX500 += star2
-                    loremX500 += "\n"
-                    loremX500 += product
-                    loremX500 += "\n"
-                    loremX500 += service
-                    loremX500 += "\n"
-                    loremX500 += price
-                    loremX500 += "\n"
-                    loremX500 += qty
-                    loremX500 += "\n"
-                    loremX500 += tqty
-                    loremX500 += "\n"
-                    loremX500 += totalbeforvat
-                    loremX500 += "\n"
-                    loremX500 += vat
-                    loremX500 += "\n"
-                    loremX500 += star3
-                    loremX500 += "\n"
-                    loremX500 += total
-                    loremX500 += "\n"
-                    loremX500 += star4
-                    loremX500 += "\n"
-                    loremX500 += address
-                    loremX500 += "\n"
-                    loremX500 += footer
-                    loremX500 += "\n"
+                    var loremX500 =   ""
+//                    var loremX500 = text + ""
+//                    loremX500 += date
+//                    loremX500 += "\n"
+//                    loremX500 += name
+//                    loremX500 += "\n"
+//                    loremX500 += merchent
+//                    loremX500 += "\n"
+//                    loremX500 += terminal
+//                    loremX500 += "\n"
+//                    loremX500 += transaction
+//                    loremX500 += "\n"
+//                    loremX500 += voucher
+//                    loremX500 += "\n"
+//                    loremX500 += car
+//                    loremX500 += "\n"
+//                    loremX500 += customer
+//                    loremX500 += "\n"
+//                    loremX500 += star1
+//                    loremX500 += "\n"
+//                    loremX500 += title
+//                    loremX500 += "\n"
+//                    loremX500 += star2
+//                    loremX500 += "\n"
+//                    loremX500 += product
+//                    loremX500 += "\n"
+//                    loremX500 += service
+//                    loremX500 += "\n"
+//                    loremX500 += price
+//                    loremX500 += "\n"
+//                    loremX500 += qty
+//                    loremX500 += "\n"
+//                    loremX500 += tqty
+//                    loremX500 += "\n"
+//                    loremX500 += totalbeforvat
+//                    loremX500 += "\n"
+//                    loremX500 += vat
+//                    loremX500 += "\n"
+//                    loremX500 += star3
+//                    loremX500 += "\n"
+//                    loremX500 += total
+//                    loremX500 += "\n"
+//                    loremX500 += star4
+//                    loremX500 += "\n"
+//                    loremX500 += address
+//                    loremX500 += "\n"
+//                    loremX500 += footer
+//                    loremX500 += "\n"
 
-
+                    hashMap.forEach { item ->
+                        loremX500 += "\n $item"
+                    }
+                    Log.d("loremX500","$loremX500")
                     val deviceName = printRey(loremX500, logoPath);
                     result.success("printer device Name : $deviceName");
                 } catch (e: Exception) {
