@@ -1,3 +1,4 @@
+import 'package:dio/src/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:all_printer/all_printer.dart';
 import 'package:all_printer/all_printer_platform_interface.dart';
@@ -13,6 +14,47 @@ class MockAllPrinterPlatform
 
   @override
   Future<String?> print(dynamic invoice) {
+    throw UnimplementedError();
+  }
+
+
+
+  @override
+  Future download(Dio dio, String url, String savePath) {
+    // TODO: implement download
+    throw UnimplementedError();
+  }
+
+  @override
+  void showDownloadProgress(received, total) {
+    // TODO: implement showDownloadProgress
+  }
+
+  @override
+  Future<String> getDownloadPath(String? uniqueId) {
+    // TODO: implement getDownloadPath
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> printImage(String imagePath) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> printLine(String line) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future printFinish() {
+    // TODO: implement printFinish
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> printQrCode(String? qrData) {
+    // TODO: implement printQrCode
     throw UnimplementedError();
   }
 }

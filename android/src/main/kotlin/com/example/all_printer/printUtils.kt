@@ -1,24 +1,27 @@
 package com.example.all_printer
 
-import android.R.attr.src
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.Build
+import android.os.Environment
 import android.os.RemoteException
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
 import com.example.all_printer.SunmiRestaurant.AidlUtil
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
 import com.imin.printerlib.IminPrintUtils
 import com.mobiiot.androidqapi.api.CsPrinter
+import com.mobiiot.androidqapi.api.Utils.AndroidBmpUtil
 import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
 import com.mobiiot.androidqapi.api.Utils.ServiceUtil
 import com.nbbse.mobiprint3.Printer
 import com.sagereal.printer.PrinterInterface
 import java.io.*
-import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
@@ -108,7 +111,13 @@ class PrintingMethods {
             "T2mini_s",
             "T1mini-G",
             "D2mini" -> {
-
+                try {
+                    // should add context here
+                    AidlUtil.getInstance().connectPrinterService()
+                    AidlUtil.getInstance().initPrinter()
+                } catch (ex: java.lang.Exception) {
+                    Log.e("  Exception  ", ex.toString() + "")
+                }
             }
 
             "D4-505",
@@ -176,7 +185,6 @@ class PrintingMethods {
             bthreadrunning = false
         }
     }
-
 
 
     @Throws(RemoteException::class)
@@ -309,7 +317,7 @@ class PrintingMethods {
         return temp
     }
 
-     fun printRey(string: String) {
+    fun printRey(string: String) {
         var string = string
 
 
@@ -581,6 +589,102 @@ class PrintingMethods {
         }
     }
 
+    fun printQrCode(bitmap: Bitmap?, string: String?) {
+        try {
+            Log.e("Constant.posType", Constant.posType.toString() + " QRPint")
+            when (Constant.posType) {
+                "MobiPrint" -> {
+                    Log.e("MobiPrint", Constant.posType.toString() + " QRPint")
+
+                    // convert qr-link invoice to .bmp image file.
+                    // read .bmp image file and print it by print class.
+                    AndroidBmpUtil.save(
+                        CsPrinter.createBarQrCode(string, BarcodeFormat.QR_CODE, 320, 380),
+                        LoginActivity?.getExternalFilesDir(
+                            Environment.DIRECTORY_DOWNLOADS
+                        )?.getPath()
+                            .toString() + "/unzipFolder/files/1/qr.bmp"
+                    )
+                    print?.printBitmap(
+                        LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                            ?.getPath()
+                            .toString() + "/unzipFolder/files/1/qr.bmp"
+                    )
+                }
+                "MP3_Plus", "MobiPrint 4+", "MP4", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
+                    try {
+                        CsPrinter.printBitmap(
+                            CsPrinter.createBarQrCode(
+                                string,
+                                BarcodeFormat.QR_CODE,
+                                384,
+                                384
+                            )
+                        )
+                    } catch (e: WriterException) {
+                        e.printStackTrace()
+                    }
+                    CsPrinter.printEndLine()
+                } catch (ex: java.lang.Exception) {
+                    Log.e("Rey Exception MP3_Plus", ex.toString() + "")
+                }
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
+                    if (bitmap != null) {
+                        AidlUtil.getInstance().printBitmap(bitmap)
+                        //                            AidlUtil.getInstance().printText("\n", 36, true, false, false);
+//                            cutPaper();
+                        Log.e("Qrcode", "Sucssess 01")
+                    }
+                } catch (ex: java.lang.Exception) {
+                    Log.e("Rey Exception Sunmi", ex.toString() + "")
+                }
+                "D4-505", "D1", "M2-Max", "M2-Pro", "D1-Pro" -> {
+                    mIminPrintUtils!!.printQrCode(string, 1)
+                    mIminPrintUtils!!.printAndFeedPaper(100)
+                }
+            }
+
+        } catch (ex: java.lang.Exception) {
+            Log.e("9 Exception Printtt", ex.toString() + "")
+        }
+    }
+
+    fun printReyFinish() {
+        Log.d("printReyFinish", "called")
+        when (Constant.posType) {
+            "MobiPrint" -> {
+                print!!.printText("\n\n")
+                Log.d("printReyFinish", "hena")
+            }
+            "WISENET5" -> try {
+                mPrinter!!.printPaper(50)
+                mPrinter!!.printFinish()
+            } catch (ex: java.lang.Exception) {
+                Log.e("1 Exception WiseNet", ex.toString() + "")
+            }
+            "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
+                CsPrinter.printText("\n\n\n\n")
+                CsPrinter.printEndLine()
+            } catch (ex: java.lang.Exception) {
+                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
+            }
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
+                AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, false)
+                cutPaper()
+            } catch (ex: java.lang.Exception) {
+                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
+            }
+            "D4-505", "D1", "M2-Max", "M2-Pro", "D1-Pro" -> {
+
+
+                //Log.d("imin int:",""+IminPrintUtils.getInstance(Login.mContext).getPrinterStatus(IminPrintUtils.PrintConnectType.USB));
+                mIminPrintUtils!!.printAndLineFeed()
+                mIminPrintUtils!!.printAndFeedPaper(50)
+                mIminPrintUtils!!.partialCut()
+            }
+        }
+    }
+
 
     private fun cutPaper() {
         if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini"
@@ -593,25 +697,8 @@ class PrintingMethods {
         }
     }
 
-    fun printReyBitmap(string: String?) {
 
-
-        try {
-
-            val url = URL(string)
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input: InputStream = connection.inputStream
-
-            CsPrinter.printBitmap(BitmapFactory.decodeStream(input))
-        } catch (e: IOException) {
-            print("Error : $e")
-        }
-    }
-    fun boom (string: String?){
-       var string="http://smartepaystaging.altkamul.ae/Content/img/printing.bmp"
-
+    fun printReyBitmap(string: String) {
         Log.d("printReyBitmap", "called")
         try {
             when (Constant.posType) {
@@ -633,8 +720,12 @@ class PrintingMethods {
 //                    if(true)
 //                        return;
 //                    Image2();
-                        val file = File(string)
-
+                        var file = File(string)
+                        if (!file.exists()) file = File(
+                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                ?.getPath()
+                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                        )
                         val options = BitmapFactory.Options()
                         options.inPreferredConfig = Bitmap.Config.ARGB_8888
                         val bitmap =
@@ -671,14 +762,23 @@ class PrintingMethods {
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> {
                     try {
                         Log.d("printReyBitmap", "im in right place")
-
+                        Log.d(
+                            "printReyBitmap",
+                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                ?.getPath()
+                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                        )
                         printRey("\n", 1)
 
 //                    if(true)
 //                        return;
 //                    Image2();
                         var file = File(string)
-
+                        if (!file.exists()) file = File(
+                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                ?.getPath()
+                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                        )
                         val options = BitmapFactory.Options()
                         options.inPreferredConfig = Bitmap.Config.ARGB_8888
                         val bitmap =
@@ -690,18 +790,7 @@ class PrintingMethods {
                         arrayBitmap.add(bitmap)
                         val is_black = FileInputStream(string)
                         val input: ByteArray = InputStreamToByte(is_black)
-
-                        try {
-                            val url = URL(string)
-                            val bitFile = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-                            CsPrinter.printBitmap(bitFile)
-                        } catch (e: IOException) {
-                            System.out.println(e)
-                        }
-
                         CsPrinter.printBitmap(input)
-
-
                         val size = file.length().toInt()
                         val bytes = ByteArray(size)
                         try {
@@ -952,6 +1041,9 @@ class PrintingMethods {
         //String.format("%10s", "foo");
     }
 
+    fun FooterPrint() {
+//        pDialog.hide();
+    }
 
     @Throws(IOException::class)
     fun InputStreamToByte(`is`: InputStream): ByteArray {
@@ -965,4 +1057,23 @@ class PrintingMethods {
         bytestream.close()
         return data
     }
+
+    fun returnStars(): String {
+        return when (Constant.posType) {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "M2-Pro" -> "************************************************"
+            "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
+            else -> "******************************"
+        }
+    }
+
+    fun returnLines(): String {
+        return when (Constant.posType) {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "M2-Pro" -> "------------------------------------------------"
+            "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
+            else -> "--------------------------------"
+        }
+    }
+
+
+
 }

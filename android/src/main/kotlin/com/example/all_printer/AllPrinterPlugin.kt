@@ -1,7 +1,5 @@
 package com.example.all_printer
 
-import android.R.attr.capitalize
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,7 +11,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import java.util.*
+import java.io.ByteArrayInputStream
 
 
 /** AllPrinterPlugin */
@@ -41,85 +39,139 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler {
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
+            "printReyFinish" -> {
+                try {
+                    printerObject?.printQrCode(null,"this is data")
+                    printerObject?.printReyFinish()
+                    result.success("success !")
+                } catch (e: Exception) {
+                    result.success("${e.message}");
+                }
+
+            }
+            "printQrCode" -> {
+                try {
+                    printerObject?.printQrCode(null,"\n ${call.arguments} \n")
+                    result.success("success !")
+                } catch (e: Exception) {
+                    result.success("${e.message}");
+                }
+
+            }
+            "printLine" -> {
+                if (call.arguments != null) {
+                    try {
+                        printerObject?.printRey("\n ${call.arguments} \n")
+                        result.success("success !")
+                    } catch (e: Exception) {
+                        result.success("${e.message}");
+                    }
+                } else {
+                    result.success("line not found !")
+                }
+            }
+            "printImage" -> {
+
+                if (call.arguments != null) {
+                    try {
+                        printerObject?.printReyBitmap("${call.arguments}")
+                        printerObject?.printRey("\n")
+                        result.success("success ! ${call.arguments}")
+                    } catch (e: Exception) {
+                        result.success("${e.message}");
+                    }
+                } else {
+                    result.success("image not found !")
+                }
+
+            }
             "print" -> {
-                val logoBitmap = call.argument<ByteArray>("logoBitmap")
-                val text = call.argument<String>("text")
-                val date = call.argument<String>("date")
-                val name = call.argument<String>("name")
-                val merchent = call.argument<String>("merchent")
-                val terminal = call.argument<String>("terminal")
-                val transaction = call.argument<String>("transaction")
-                val voucher = call.argument<String>("voucher")
-                val car = call.argument<String>("car")
-                val customer = call.argument<String>("customer")
-                val star1 = call.argument<String>("star1")
-                val title = call.argument<String>("title")
-                val star2 = call.argument<String>("star2")
-                val product = call.argument<String>("product")
-                val service = call.argument<String>("service")
-                val price = call.argument<String>("price")
-                val qty = call.argument<String>("qty")
-                val tqty = call.argument<String>("tqty")
-                val totalbeforvat = call.argument<String>("totalbeforvat")
-                val vat = call.argument<String>("vat")
-                val star3 = call.argument<String>("star3")
-                val total = call.argument<String>("total")
-                val star4 = call.argument<String>("star4")
-                val address = call.argument<String>("address")
-                val footer = call.argument<String>("footer")
 
-                var loremX500 = "The Quick Brown fox jumped over The Lazy Dog"
+                try {
 
-                loremX500 += date
-                loremX500 += "\n"
-                loremX500 += name
-                loremX500 += "\n"
-                loremX500 += merchent
-                loremX500 += "\n"
-                loremX500 += terminal
-                loremX500 += "\n"
-                loremX500 += transaction
-                loremX500 += "\n"
-                loremX500 += voucher
-                loremX500 += "\n"
-                loremX500 += car
-                loremX500 += "\n"
-                loremX500 += customer
-                loremX500 += "\n"
-                loremX500 += star1
-                loremX500 += "\n"
-                loremX500 += title
-                loremX500 += "\n"
-                loremX500 += star2
-                loremX500 += "\n"
-                loremX500 += product
-                loremX500 += "\n"
-                loremX500 += service
-                loremX500 += "\n"
-                loremX500 += price
-                loremX500 += "\n"
-                loremX500 += qty
-                loremX500 += "\n"
-                loremX500 += tqty
-                loremX500 += "\n"
-                loremX500 += totalbeforvat
-                loremX500 += "\n"
-                loremX500 += vat
-                loremX500 += "\n"
-                loremX500 += star3
-                loremX500 += "\n"
-                loremX500 += total
-                loremX500 += "\n"
-                loremX500 += star4
-                loremX500 += "\n"
-                loremX500 += address
-                loremX500 += "\n"
-                loremX500 += footer
-                loremX500 += "\n"
+                    print("${call.arguments}")
+                    result.success("printer device Name : none")
+
+                    val text = call.argument<String>("text")
+                    val date = call.argument<String>("date")
+                    val name = call.argument<String>("name")
+                    val merchent = call.argument<String>("merchent")
+                    val terminal = call.argument<String>("terminal")
+                    val transaction = call.argument<String>("transaction")
+                    val voucher = call.argument<String>("voucher")
+                    val car = call.argument<String>("car")
+                    val customer = call.argument<String>("customer")
+                    val star1 = call.argument<String>("star1")
+                    val title = call.argument<String>("title")
+                    val star2 = call.argument<String>("star2")
+                    val product = call.argument<String>("product")
+                    val service = call.argument<String>("service")
+                    val price = call.argument<String>("price")
+                    val qty = call.argument<String>("qty")
+                    val tqty = call.argument<String>("tqty")
+                    val totalbeforvat = call.argument<String>("totalbeforvat")
+                    val vat = call.argument<String>("vat")
+                    val star3 = call.argument<String>("star3")
+                    val total = call.argument<String>("total")
+                    val star4 = call.argument<String>("star4")
+                    val address = call.argument<String>("address")
+                    val footer = call.argument<String>("footer")
+                    val logoPath = call.argument<String>("logoPath")
+
+                    var loremX500 = text + ""
+                    loremX500 += date
+                    loremX500 += "\n"
+                    loremX500 += name
+                    loremX500 += "\n"
+                    loremX500 += merchent
+                    loremX500 += "\n"
+                    loremX500 += terminal
+                    loremX500 += "\n"
+                    loremX500 += transaction
+                    loremX500 += "\n"
+                    loremX500 += voucher
+                    loremX500 += "\n"
+                    loremX500 += car
+                    loremX500 += "\n"
+                    loremX500 += customer
+                    loremX500 += "\n"
+                    loremX500 += star1
+                    loremX500 += "\n"
+                    loremX500 += title
+                    loremX500 += "\n"
+                    loremX500 += star2
+                    loremX500 += "\n"
+                    loremX500 += product
+                    loremX500 += "\n"
+                    loremX500 += service
+                    loremX500 += "\n"
+                    loremX500 += price
+                    loremX500 += "\n"
+                    loremX500 += qty
+                    loremX500 += "\n"
+                    loremX500 += tqty
+                    loremX500 += "\n"
+                    loremX500 += totalbeforvat
+                    loremX500 += "\n"
+                    loremX500 += vat
+                    loremX500 += "\n"
+                    loremX500 += star3
+                    loremX500 += "\n"
+                    loremX500 += total
+                    loremX500 += "\n"
+                    loremX500 += star4
+                    loremX500 += "\n"
+                    loremX500 += address
+                    loremX500 += "\n"
+                    loremX500 += footer
+                    loremX500 += "\n"
 
 
-                var deviceName = printRey(loremX500, logoBitmap);
-                result.success("printer device Name : $deviceName");
+                    val deviceName = printRey(loremX500, logoPath);
+                    result.success("printer device Name : $deviceName");
+                } catch (e: Exception) {
+                    result.success("${e.message}");
+                }
             }
             else -> {
                 result.notImplemented()
@@ -131,16 +183,29 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(null)
     }
 
-    private fun printRey(loremX500: String, logoBitmap: ByteArray?): String {
+    private fun printRey(loremX500: String, logoPath: String?): String {
         Log.d("PosType", Constant.posType)
 
-        var text = "\n\n---------------------------- \n\n"
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888
+
+//        val arrayInputStream = ByteArrayInputStream(logoBitmap)
+//
+//        val bitmap = BitmapFactory.decodeStream(arrayInputStream,null,options)
+
+
+        var text = "\n---------------------------- \n"
         text += "${getDeviceName()}" + "\n"
-        text = "\n\n---------------------------- \n\n"
-        text += "\n\n $loremX500"
-        text += "\n\n\n\n\n\n\n\n\n\n\n\n"
-//        printerObject?.printReyBitmap("http://smartepaystaging.altkamul.ae/Content/img/printing.bmp")
+        text += "\n---------------------------- \n"
+        text += "\n$loremX500 \n"
+
+        if (logoPath != null)
+            printerObject?.printReyBitmap(logoPath)
+
+        text += "\n"
         printerObject?.printRey(text)
+
+
         return "${getDeviceName()}"
     }
 

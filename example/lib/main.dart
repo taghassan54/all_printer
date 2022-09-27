@@ -1,12 +1,11 @@
+
+import 'package:all_printer/models/InvoiceListModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:all_printer/all_printer.dart';
-import 'package:bitmap/bitmap.dart';
 import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,67 +24,90 @@ class _MyAppState extends State<MyApp> {
 
   var dio = Dio();
 
-  dynamic invoice;
-  getInvoice()async{
-    Bitmap bitmap = await Bitmap.fromProvider(const NetworkImage("http://smartepaystaging.altkamul.ae/Content/img/printing.bmp",),); // Notice this is an async operation
+  InvoiceListModel? invoiceListModel;
+  dynamic invoice=[];
+  String invoiceText='';
+  String merchantId = "50608101";
 
-     invoice=<String, dynamic>{
-      'date': "Date:2022-01-30 10:25:35",
-      'name': "Name: Altkamul Printer Test",
-      'merchent': "Merchent ID: 10001002",
-      'terminal': "Terminal ID: 667766776",
-      'transaction': "Transaction ID: 10000001",
-      'voucher': "Voucher No: 22-003111",
-      'car': "Car No: 1001k",
-      'customer': "Customer No: 971512345678",
-      'star1': "******************************",
-      'title': "Tax Invoice",
-      'logoBitmap':bitmap.content,
-      // 'logoBitmap':bitmap.content.toString(),
-      'star2': "******************************",
-      'product': "Title: Exterir Wash Small Car",
-      'service': "service: Wash",
-      'price': "price: 35.00",
-      'qty': "qty: 2",
-      'tqty': "Total Qty: 2",
-      'totalbeforvat': "Total Befor Vat: 70.00 AED",
-      'vat': "Vat: @5%: 11.00 AED",
-      'star3': "-------------------------------",
-      'total': "Total: 71.00 AED",
-      'star4': "******************************",
-      'address': "City: Dubai \nUAE \nCall Us : 05123456789\n",
-      'star5': "-------------------------------",
-      'footer': "Thanks you for try our Flutter base POS",
+  getInvoice() async {
+    invoiceListModel =InvoiceListModel(invoice: [
+      Invoice(key: 'text',value: "The Quick Brown fox jumped over The Lazy Dog test"),
+      Invoice(key: 'date',value: "2022-01-30 10:25:35"),
+      Invoice(key: 'merchent',value: "Merchent ID: $merchantId"),
+      Invoice(key: 'terminal',value: "Terminal ID: 11111111"),
+      Invoice(key: 'star1',value: "****************&&**************"),
+    ]);
+
+    invoice= <String, dynamic>{
+           'text': "The Quick Brown fox jumped over The Lazy Dog",
+            'date': "Date:2022-01-30 10:25:35",
+            'name': "Name: Altkamul Printer Test",
+            'merchent': "Merchent ID: $merchantId",
+            'terminal': "Terminal ID: 667766776",
+            'transaction': "Transaction ID: 10000001",
+            'voucher': "Voucher No: 22-003111",
+            'car': "Car No: 1001k",
+            'customer': "Customer No: 971512345678",
+            'star1': "******************************",
+            'title': "Tax Invoice",
+            // 'logoPath':
+            //     "/storage/emulated/0/Download/unzipFolder/files/10001002/printing.bmp",
+            // 'logoBitmap':bitmap.content.toString(),
+            'star2': "******************************",
+            'product': "Title: Exterir Wash Small Car",
+            'service': "service: Wash",
+            'price': "price: 35.00",
+            'qty': "qty: 2",
+            'tqty': "Total Qty: 2",
+            'totalbeforvat': "Total Befor Vat: 70.00 AED",
+            'vat': "Vat: @5%: 11.00 AED",
+            'star3': "-------------------------------",
+            'total': "Total: 71.00 AED",
+            'star4': "******************************",
+            'address': "City: Dubai UAE Call Us : 05123456789",
+            'star5': "-------------------------------",
+            'footer': "Thanks you for try our Flutter base POS",
     };
+
+    for(Invoice item in invoiceListModel?.invoice??[]){
+      invoice[item.key]=item.value;
+    }
+
 
   }
 
-
   @override
   void initState() {
+    _allPrinterPlugin.getPermission();
     super.initState();
-
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
+    String platformVersion = 'starting ... ';
 
-      var tempDir = await getApplicationDocumentsDirectory();
-      String fullPath = "${tempDir.path}/logo.bmp";
-      if (kDebugMode) {
-        print('full path $fullPath');
-      }
+    String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
+
+    bool isDone = await _allPrinterPlugin.download(
+        dio,
+        "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
+        fullPath);
 
     await getInvoice();
+    // invoice['logoPath'] = fullPath;
+
+    if (isDone) {
       platformVersion =
-          await _allPrinterPlugin.print(invoice) ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+          await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
+
+    platformVersion = await _allPrinterPlugin.print(invoice: invoice) ??
+        '';
+
+    platformVersion = await _allPrinterPlugin.printSingleLine(
+            line: "this normal text !") ??
+        '';
+    _allPrinterPlugin.printReyFinish();
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -99,17 +121,23 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(onPressed:()=> initPlatformState(),child:const Icon(Icons.print)),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => initPlatformState(),
+            child: const Icon(Icons.print)),
         body: Center(
           child: Text('print result: $_platformVersion\n'),
         ),
       ),
     );
   }
+//get storage permission
+
 }
