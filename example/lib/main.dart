@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:all_printer/all_printer.dart';
 import 'package:dio/dio.dart';
+import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,12 +78,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _allPrinterPlugin.getPermission();
+    // _allPrinterPlugin.getPermission();
     super.initState();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    await getPermission();
     String platformVersion = 'starting ... ';
 
     String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
@@ -139,15 +142,14 @@ class _MyAppState extends State<MyApp> {
               Center(
                 child: Text('print result: $_platformVersion\n'),
               ),
-
               ElevatedButton(
                 onPressed: () => initPlatformState(),
                 child: const SizedBox(
                   width: double.infinity,
-                  child: Text("Print Full invoice", textAlign: TextAlign.center),
+                  child:
+                      Text("Print Full invoice", textAlign: TextAlign.center),
                 ),
               ),
-
               ElevatedButton(
                 onPressed: () => printText(),
                 child: const SizedBox(
@@ -167,6 +169,14 @@ class _MyAppState extends State<MyApp> {
                 child: const SizedBox(
                   width: double.infinity,
                   child: Text("Print QrCode", textAlign: TextAlign.center),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => getPlatformVersion(),
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text("Check Platform Version",
+                      textAlign: TextAlign.center),
                 ),
               )
             ],
@@ -189,7 +199,8 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  printImage()async {
+  printImage() async {
+    await getPermission();
     String platformVersion = 'starting ... ';
 
     String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
@@ -208,13 +219,28 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  printQrCode() async{
+  printQrCode() async {
     String platformVersion = 'starting ... ';
     platformVersion =
         await _allPrinterPlugin.printQrCode(qrData: "this is Data ") ?? '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
       _platformVersion = platformVersion;
+    });
+  }
+
+  Future getPermission() async {
+    // if(await Permission.storage.isGranted){}
+        if(await Permission.camera.isGranted){
+        await Permission.camera.request();
+      }
+  }
+
+  getPlatformVersion() async {
+    String? platformVersion = 'starting ... ';
+    platformVersion = await _allPrinterPlugin.getPlatformVersion();
+    setState(() {
+      _platformVersion = platformVersion!;
     });
   }
 }

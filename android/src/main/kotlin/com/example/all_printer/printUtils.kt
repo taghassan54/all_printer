@@ -113,7 +113,7 @@ class PrintingMethods {
             "D2mini" -> {
                 try {
                     // should add context here
-                    AidlUtil.getInstance().connectPrinterService()
+                    AidlUtil.getInstance().connectPrinterService(LoginActivity)
                     AidlUtil.getInstance().initPrinter()
                 } catch (ex: java.lang.Exception) {
                     Log.e("  Exception  ", ex.toString() + "")

@@ -96,6 +96,7 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
   @override
   Future<String> getDownloadPath(String? uniqueId)async {
     try {
+
       var tempDir = await getApplicationDocumentsDirectory();
 
       String path="${tempDir.path}/$uniqueId";

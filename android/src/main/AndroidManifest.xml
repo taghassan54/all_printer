@@ -1,59 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.all_printer">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.all_printer">
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission
-        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name=" requires:android.permission.WRITE_SECURE_SETTINGS" />
-    <uses-permission
-        android:name="android.permission.BIND_PRINT_SERVICE" />
-    <uses-permission
-        android:name="android.permission.WRITE_SECURE_SETTINGS"
-         />
-    <uses-permission
-        android:name="android.permission.WRITE_SETTINGS"
-         />
-    <uses-permission
-        android:name="android.permission.CLEAR_APP_USER_DATA"
-         />
-    <uses-permission
-        android:name="android.permission.CLEAR_APP_CACHE"
-         />
-    <uses-permission
-        android:name="android.permission.READ_LOGS"
-         />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
-    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission
-        android:name="android.permission.UPDATE_DEVICE_STATS"
-         />
-    <uses-permission
-        android:name="android.permission.MODIFY_PHONE_STATE"
-         />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 </manifest>

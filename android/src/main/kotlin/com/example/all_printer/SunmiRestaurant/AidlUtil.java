@@ -37,14 +37,13 @@ public class AidlUtil {
     }
 
 
-    public void connectPrinterService() {
-//        this.context = context.getApplicationContext();
-//        Intent intent = new Intent();
-//        intent.setPackage(SERVICE＿PACKAGE);
-//        intent.setAction(SERVICE＿ACTION);
-//        context.getApplicationContext().startService(intent);
-//        context.getApplicationContext().bindService(intent, connService, Context.BIND_AUTO_CREATE);
-
+    public void connectPrinterService(Context context) {
+        this.context = context.getApplicationContext();
+        Intent intent = new Intent();
+        intent.setPackage(SERVICE＿PACKAGE);
+        intent.setAction(SERVICE＿ACTION);
+        context.getApplicationContext().startService(intent);
+        context.getApplicationContext().bindService(intent, connService, Context.BIND_AUTO_CREATE);
     }
 
     /**
