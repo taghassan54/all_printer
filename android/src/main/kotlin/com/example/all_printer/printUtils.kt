@@ -123,6 +123,8 @@ class PrintingMethods {
             "D4-505",
             "D1",
             "M2-Max",
+            "Swift 1",
+                "S1",
             "D1-Pro" -> {
                 Log.e("mIminPrintUtils", "detict")
                 try {
@@ -491,7 +493,7 @@ class PrintingMethods {
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception Mobiwire", ex.toString() + "")
             }
-            "D4-505", "D1", "M2-Max", "M2-Pro", "D1-Pro" -> {
+            "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
 
                 mIminPrintUtils!!.setAlignment(0)
                 mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
@@ -560,7 +562,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
-                "D4-505", "D1", "M2-Max", "M2-Pro", "D1-Pro" -> if (size == 2) {
+                "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
                     mIminPrintUtils!!.setAlignment(1)
                     mIminPrintUtils?.setTextSize(26)
@@ -638,7 +640,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
                 }
-                "D4-505", "D1", "M2-Max", "M2-Pro", "D1-Pro" -> {
+                "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
                     mIminPrintUtils!!.printQrCode(string, 1)
                     mIminPrintUtils!!.printAndFeedPaper(100)
                 }
@@ -674,7 +676,7 @@ class PrintingMethods {
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
-            "D4-505", "D1", "M2-Max", "M2-Pro", "D1-Pro" -> {
+            "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
 
 
                 //Log.d("imin int:",""+IminPrintUtils.getInstance(Login.mContext).getPrinterStatus(IminPrintUtils.PrintConnectType.USB));
@@ -836,7 +838,13 @@ class PrintingMethods {
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     AidlUtil.getInstance().printBitmap(bitmap, 0)
                 }
-                "D4-505", "D1" -> {
+                "D4-505",
+                "D1",
+                "M2-Pro",
+                "M2-Max",
+                "Swift 1",
+                    "S1",
+                "D1-Pro" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.RGB_565
                     var bitmap_black =
@@ -1060,7 +1068,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "Swift 1","S1", "M2-Pro" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1068,12 +1076,11 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "Swift 1","S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
     }
-
 
 
 }

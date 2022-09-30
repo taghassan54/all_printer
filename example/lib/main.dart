@@ -4,8 +4,6 @@ import 'dart:async';
 
 import 'package:all_printer/all_printer.dart';
 import 'package:dio/dio.dart';
-import 'package:permission_handler/permission_handler.dart';
-// import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,50 +28,31 @@ class _MyAppState extends State<MyApp> {
   String merchantId = "50608101";
 
   getInvoice() async {
-    invoiceListModel = InvoiceListModel(invoice: [
-      Invoice(
-          key: 'text',
-          value: "The Quick Brown fox jumped over The Lazy Dog test"),
-      Invoice(key: 'date', value: "2022-01-30 10:25:35"),
-      Invoice(key: 'merchent', value: "Merchent ID: $merchantId"),
-      Invoice(key: 'terminal', value: "Terminal ID: 11111111"),
-      Invoice(key: 'star1', value: "****************&&**************"),
-    ]);
+    // invoiceListModel = InvoiceListModel(invoice: [
+    //   Invoice(
+    //       key: 'text',
+    //       value: "The Quick Brown fox jumped over The Lazy Dog test"),
+    //   Invoice(key: 'date', value: "2022-01-30 10:25:35"),
+    //   Invoice(key: 'merchent', value: "Merchent ID: $merchantId"),
+    //   Invoice(key: 'terminal', value: "Terminal ID: 11111111"),
+    //   Invoice(key: 'star1', value: "****************&&**************"),
+    // ]);
 
-    invoice = <String, dynamic>{
-      'text': "The Quick Brown fox jumped over The Lazy Dog",
-      'date': "Date:2022-01-30 10:25:35",
-      'name': "Name: Altkamul Printer Test",
-      'merchent': "Merchent ID: $merchantId",
-      'terminal': "Terminal ID: 667766776",
-      'transaction': "Transaction ID: 10000001",
-      'voucher': "Voucher No: 22-003111",
-      'car': "Car No: 1001k",
-      'customer': "Customer No: 971512345678",
-      'star1': "******************************",
-      'title': "Tax Invoice",
-      // 'logoPath':
-      //     "/storage/emulated/0/Download/unzipFolder/files/10001002/printing.bmp",
-      // 'logoBitmap':bitmap.content.toString(),
-      'star2': "******************************",
-      'product': "Title: Exterir Wash Small Car",
-      'service': "service: Wash",
-      'price': "price: 35.00",
-      'qty': "qty: 2",
-      'tqty': "Total Qty: 2",
-      'totalbeforvat': "Total Befor Vat: 70.00 AED",
-      'vat': "Vat: @5%: 11.00 AED",
-      'star3': "-------------------------------",
-      'total': "Total: 71.00 AED",
-      'star4': "******************************",
-      'address': "City: Dubai UAE Call Us : 05123456789",
-      'star5': "-------------------------------",
-      'footer': "Thanks you for try our Flutter base POS",
-    };
-
-    for (Invoice item in invoiceListModel?.invoice ?? []) {
-      invoice[item.key] = item.value;
+    //
+    try {
+      var response = await Dio().get('http://213.159.5.155:410/invoice.json');
+print(response.data);
+      setState((){
+        invoice = response.data;
+      });
+    } catch (e) {
+print(e.toString());
     }
+    //
+    //
+    // for (Invoice item in invoiceListModel?.invoice ?? []) {
+    //   invoice[item.key] = item.value;
+    // }
   }
 
   @override
@@ -84,7 +63,7 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    await getPermission();
+
     String platformVersion = 'starting ... ';
 
     String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
@@ -95,14 +74,17 @@ class _MyAppState extends State<MyApp> {
         fullPath);
 
     await getInvoice();
-    // invoice['logoPath'] = fullPath;
+    // invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
 
     if (isDone) {
       platformVersion =
           await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
 
-    platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
+
+
+      platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
+
 
     platformVersion =
         await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
@@ -123,6 +105,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -200,7 +183,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   printImage() async {
-    await getPermission();
+
     String platformVersion = 'starting ... ';
 
     String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
@@ -209,7 +192,10 @@ class _MyAppState extends State<MyApp> {
         dio,
         "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
         fullPath);
+
+
     if (isDone) {
+    // fullPath="storage/emulated/0/download/printing.bmp";
       platformVersion =
           await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
       _allPrinterPlugin.printReyFinish();
@@ -229,12 +215,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future getPermission() async {
-    // if(await Permission.storage.isGranted){}
-        if(await Permission.camera.isGranted){
-        await Permission.camera.request();
-      }
-  }
+
 
   getPlatformVersion() async {
     String? platformVersion = 'starting ... ';

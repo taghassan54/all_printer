@@ -2,6 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.all_printer_example">
 
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
     <!--
      add   android:requestLegacyExternalStorage="true"
      android:largeHeap="true"
@@ -12,12 +20,13 @@
 
     <application
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:label="all_printer_example"
-        android:requestLegacyExternalStorage="true"
-        android:largeHeap="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="all_printer_example"
+        android:largeHeap="true"
+        requestLegacyStorage = "true"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
@@ -34,6 +43,11 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
+
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/provider_paths" />-->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
