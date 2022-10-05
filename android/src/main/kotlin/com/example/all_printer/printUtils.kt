@@ -501,7 +501,7 @@ class PrintingMethods {
                 mIminPrintUtils?.printText(string)
                 mIminPrintUtils?.printAndLineFeed()
                 mIminPrintUtils?.printAndFeedPaper(50)
-                mIminPrintUtils?.partialCut()
+//                mIminPrintUtils?.partialCut()
 
             }
         }

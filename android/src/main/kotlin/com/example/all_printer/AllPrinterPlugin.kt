@@ -119,8 +119,10 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     var loremX500 = ""
 
-                    hashMap.forEach { item ->
-                        loremX500 += "\n $item"
+                    hashMap.forEach {
+                        print("start from here")
+                        if(it.key!="logoPath")
+                        loremX500 += "\n ${it.value}"
                     }
                     Log.d("loremX500", loremX500)
                     val deviceName = printRey(loremX500, logoPath);
@@ -148,18 +150,18 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 //        val arrayInputStream = ByteArrayInputStream(logoBitmap)
 //
 //        val bitmap = BitmapFactory.decodeStream(arrayInputStream,null,options)
+        var text="";
 
-
-//        var text = "\n---------------------------- \n"
+//         text += "\n---------------------------- \n"
 //        text += "${getDeviceName()}" + "\n"
 //        text += "\n---------------------------- \n"
-//        text += "\n$loremX500 \n"
+        text += "\n$loremX500 \n"
 
         if (logoPath != null)
             printerObject?.printReyBitmap(logoPath)
 
-
-        printerObject?.printRey(loremX500)
+        text += "\n"
+        printerObject?.printRey(text)
 
 
         return "${getDeviceName()}"

@@ -77,8 +77,9 @@ print(e.toString());
     // invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
 
     if (isDone) {
-      platformVersion =
-          await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
+      invoice['logoPath'] = fullPath;
+      // platformVersion =
+      //     await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
 
 
