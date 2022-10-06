@@ -82,7 +82,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printRey("${call.arguments}",40)
+                        printerObject?.printRey("${call.arguments}",50)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -159,7 +159,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             printerObject?.printReyBitmap(logoPath)
 
         text += "\n"
-        printerObject?.printRey(text)
+        printerObject?.printRey(text,50)
 
 
         return "${getDeviceName()}"
