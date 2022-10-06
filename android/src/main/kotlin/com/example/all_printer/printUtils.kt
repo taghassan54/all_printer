@@ -576,7 +576,7 @@ class PrintingMethods {
                 } else {
                     Log.e("Printtt", size.toString() + "")
                     mIminPrintUtils!!.setAlignment(0)
-                    mIminPrintUtils?.setTextSize(26)
+                    mIminPrintUtils?.setTextSize(size)
                     mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
                     mIminPrintUtils?.printText(
                         """
