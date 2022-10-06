@@ -144,24 +144,10 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun printRey(loremX500: String, logoPath: String?): String {
         Log.d("PosType", Constant.posType)
 
-        val options = BitmapFactory.Options()
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888
-
-//        val arrayInputStream = ByteArrayInputStream(logoBitmap)
-//
-//        val bitmap = BitmapFactory.decodeStream(arrayInputStream,null,options)
-        var text="";
-
-//         text += "\n---------------------------- \n"
-//        text += "${getDeviceName()}" + "\n"
-//        text += "\n---------------------------- \n"
-        text += "\n$loremX500 \n"
-
         if (logoPath != null)
             printerObject?.printReyBitmap(logoPath)
-
-        text += "\n"
-        printerObject?.printRey(text,30)
+        
+        printerObject?.printRey(loremX500,30)
 
 
         return "${getDeviceName()}"
