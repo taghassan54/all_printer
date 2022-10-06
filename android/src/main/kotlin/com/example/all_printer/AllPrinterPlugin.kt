@@ -121,7 +121,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     var index=0
                     hashMap.forEach {
                         if(it.key!="logoPath")
-                        loremX500 += "$index  ${hashMap["$index"]} \n"
+                        loremX500 += "${hashMap["$index"]} \n"
                         index++
                     }
                     Log.d("loremX500", loremX500)
@@ -161,7 +161,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             printerObject?.printReyBitmap(logoPath)
 
         text += "\n"
-        printerObject?.printRey(text)
+        printerObject?.printRey(text,45)
 
 
         return "${getDeviceName()}"
