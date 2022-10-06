@@ -120,7 +120,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     hashMap.forEach {
                         if(it.key!="logoPath")
-                        loremX500 += "\n ${it.value}"
+                        loremX500 += "${it.value} \n"
                     }
                     Log.d("loremX500", loremX500)
                     val deviceName = printRey(loremX500, logoPath);
