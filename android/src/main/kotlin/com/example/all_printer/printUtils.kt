@@ -537,7 +537,7 @@ class PrintingMethods {
                         string,
                         size - 1,
                         1,
-                        1,
+                        2,
                         0,
                         false,
                         false

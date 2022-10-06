@@ -152,7 +152,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             if (logoPath != null)
                 printerObject?.printReyBitmap(logoPath)
 
-            printerObject?.printRey(loremX500,30)
+            printerObject?.printRey(loremX500,35)
             "print success"
         }catch (e:Exception){
             "${e.message}"
