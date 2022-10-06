@@ -161,7 +161,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             printerObject?.printReyBitmap(logoPath)
 
         text += "\n"
-        printerObject?.printRey(text,35)
+        printerObject?.printRey(text,30)
 
 
         return "${getDeviceName()}"
