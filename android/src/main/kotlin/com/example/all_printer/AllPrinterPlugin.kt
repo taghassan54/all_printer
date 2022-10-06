@@ -96,7 +96,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 if (call.arguments != null) {
                     try {
                         printerObject?.printReyBitmap("${call.arguments}")
-                        printerObject?.printRey("\n")
+//                        printerObject?.printRey("\n")
                         result.success("success ! ")
                     } catch (e: Exception) {
                         result.success("${e.message}");
