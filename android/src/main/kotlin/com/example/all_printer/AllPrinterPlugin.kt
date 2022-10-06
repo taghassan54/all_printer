@@ -113,19 +113,18 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.success("printer device Name : none")
 
                     val hashMap = call.arguments as HashMap<*, *>
-
+                    val logoPath=null
 //                    val logoPath = call.argument<String>("0")
 
                     var loremX500 = ""
                     index = 0
                     hashMap.forEach { _ ->
-                        if (index != 0)
                             loremX500 += "${hashMap["$index"]} \n"
                         index++
 
                     }
-                    val logoPath = "${hashMap["0"]}"
-                    
+//                    val logoPath = "${hashMap["0"]}"
+
                     Log.d("loremX500", loremX500)
                     val deviceName = printRey(loremX500, logoPath);
                     result.success("printer device Name : $deviceName");
