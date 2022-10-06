@@ -109,7 +109,6 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "print" -> {
 
                 try {
-                    printerObject?.initializePrinters()
 
                     result.success("printer device Name : none")
 
