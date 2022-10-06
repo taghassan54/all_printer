@@ -32,7 +32,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     var mContext: Context? = null
     var aContext: Context? = null
-    private var index = 0
+
     private var activity: Activity? = null
 
     private var printerObject: PrintingMethods? = null
@@ -113,18 +113,17 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.success("printer device Name : none")
 
                     val hashMap = call.arguments as HashMap<*, *>
-                    val logoPath=null
-//                    val logoPath = call.argument<String>("0")
+
+                    val logoPath = call.argument<String>("0")
 
                     var loremX500 = ""
-                    index = 0
-                    hashMap.forEach { _ ->
-                            loremX500 += "${hashMap["$index"]} \n"
+
+                    var index=0
+                    hashMap.forEach {
+                        if(it.key!="0")
+                        loremX500 += "${hashMap["$index"]} \n"
                         index++
-
                     }
-//                    val logoPath = "${hashMap["0"]}"
-
                     Log.d("loremX500", loremX500)
                     val deviceName = printRey(loremX500, logoPath);
                     result.success("printer device Name : $deviceName");
@@ -145,13 +144,13 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun printRey(loremX500: String, logoPath: String?): String {
         Log.d("PosType", Constant.posType)
 
-//        val options = BitmapFactory.Options()
-//        options.inPreferredConfig = Bitmap.Config.ARGB_8888
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888
 
 //        val arrayInputStream = ByteArrayInputStream(logoBitmap)
 //
 //        val bitmap = BitmapFactory.decodeStream(arrayInputStream,null,options)
-        var text = "";
+        var text="";
 
 //         text += "\n---------------------------- \n"
 //        text += "${getDeviceName()}" + "\n"
@@ -162,7 +161,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             printerObject?.printReyBitmap(logoPath)
 
         text += "\n"
-        printerObject?.printRey(text, 30)
+        printerObject?.printRey(text,30)
 
 
         return "${getDeviceName()}"
