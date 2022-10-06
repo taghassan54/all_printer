@@ -144,17 +144,20 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun printRey(loremX500: String, logoPath: String?): String {
         Log.d("PosType", Constant.posType)
 
-        if (logoPath != null)
-            printerObject?.printReyBitmap(logoPath)
-        
-        printerObject?.printRey(loremX500,30)
+try {
+    if (logoPath != null)
+        printerObject?.printReyBitmap(logoPath)
 
+    printerObject?.printRey(loremX500,30)
+    return  "print success"
+}catch (e:Exception){
+    return "${e.message}"
+}
 
-        return "${getDeviceName()}"
     }
 
 
-    fun getDeviceName(): String? {
+    private fun getDeviceName(): String? {
         val manufacturer = Build.MANUFACTURER
         return Build.MODEL
     }
