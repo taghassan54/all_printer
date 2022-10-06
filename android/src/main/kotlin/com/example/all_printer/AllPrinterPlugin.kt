@@ -121,9 +121,13 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     var index=0
                     hashMap.forEach {
                         if(it.key!="logoPath")
-                        loremX500 += "${hashMap["$index"]} \n"
-                        index++
+                        {
+                            loremX500 += "\n $index -${hashMap["$index"]}"
+                            index++
+                        }
                     }
+                    index=0
+
                     Log.d("loremX500", loremX500)
                     val deviceName = printRey(loremX500, logoPath);
                     result.success("printer device Name : $deviceName");
@@ -144,15 +148,15 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun printRey(loremX500: String, logoPath: String?): String {
         Log.d("PosType", Constant.posType)
 
-try {
-    if (logoPath != null)
-        printerObject?.printReyBitmap(logoPath)
+        return try {
+            if (logoPath != null)
+                printerObject?.printReyBitmap(logoPath)
 
-    printerObject?.printRey(loremX500,30)
-    return  "print success"
-}catch (e:Exception){
-    return "${e.message}"
-}
+            printerObject?.printRey(loremX500,30)
+            "print success"
+        }catch (e:Exception){
+            "${e.message}"
+        }
 
     }
 
