@@ -120,11 +120,11 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     var loremX500 = ""
                     index=0
                     hashMap.forEach { _ ->
-                        if(index!=0)
-                        {
+//                        if(index!=0)
+//                        {
                             loremX500 += "${hashMap["$index"]} \n"
                             index++
-                        }
+//                        }
                     }
                     index=0
                     Log.d("loremX500", loremX500)
