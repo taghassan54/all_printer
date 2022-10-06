@@ -120,7 +120,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     hashMap.forEach {
                         print("start from here")
-                        print("$hashMap")
+                        print("${it.key} - ${it.value} \n")
                         if(it.key!="logoPath")
                         loremX500 += "\n ${it.value}"
                     }
