@@ -114,13 +114,13 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     val hashMap = call.arguments as HashMap<*, *>
 
-                    val logoPath = call.argument<String>("0")
+                    val logoPath = call.argument<String>("logoPath")
 
                     var loremX500 = ""
 
                     var index=0
                     hashMap.forEach {
-                        if(it.key!="0")
+                        if(it.key!="logoPath")
                         loremX500 += "${hashMap["$index"]} \n"
                         index++
                     }
