@@ -40,10 +40,36 @@ class _MyAppState extends State<MyApp> {
 
     //
     try {
-      var response = await Dio().get('http://213.159.5.155:410/invoice.json');
-print(response.data);
+      // var response = await Dio().get('http://213.159.5.155:410/invoice.json');
+
       setState((){
-        invoice = response.data;
+        invoice = {
+          "0": "The Quick Brown fox jumped over The Lazy Dog",
+          "1": "Date:2022-01-30 10:25:35",
+          "2": "Name: Altkamul Printer Test",
+          "3": "Merchent ID: $merchantId",
+          "4": "Terminal ID: 667766776",
+          "5": "Transaction ID: 10000001",
+          "6": "Voucher No: 22-003111",
+          "7": "Car No: 1001k",
+          "8": "Customer No: 971512345678",
+          "9": "******************************",
+          "10": "Tax Invoice",
+          "11": "******************************",
+          "12": "Title: Exterir Wash Small Car",
+          "13": "service: Wash",
+          "14": "price: 35.00",
+          "15": "qty: 2",
+          "16": "Total Qty: 2",
+          "17": "Total Befor Vat: 70.00 AED",
+          "18": "Vat: @5%: 11.00 AED",
+          "19": "-------------------------------",
+          "20": "Total: 71.00 AED",
+          "21": "******************************",
+          "22": "City: Dubai UAE Call Us : 05123456789",
+          "23": "-------------------------------",
+          "24": "Thanks you for try our Flutter base POS"
+        };
       });
     } catch (e) {
 print(e.toString());
