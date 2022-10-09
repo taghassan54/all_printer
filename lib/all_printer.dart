@@ -37,12 +37,12 @@ class AllPrinter {
     // if(!(await Permission.storage.isGranted)){
     //   await Permission.storage.request();
     // }
-    // if (!(await File(savePath).exists())) {
+    if (!(await File(savePath).exists())) {
       return await AllPrinterPlatform.instance.download(dio, url, savePath);
-    // }else{
-    //   AppLogger.logInfo("download(): $savePath File exists ! ");
-    //   return true;
-    // }
+    }else{
+      AppLogger.logInfo("download(): $savePath File exists ! ");
+      return true;
+    }
   }
 
   Future<String> getDownloadPath(String? uniqueId) async {
