@@ -75,7 +75,7 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
        // File(savePath)
        //  .writeAsBytesSync(response.data);
 
-      print(response.headers);
+      // print(response.headers);
       File file = File(savePath);
       var raf = file.openSync(mode: FileMode.write);
       // response.data is List<int> type
