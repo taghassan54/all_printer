@@ -120,12 +120,11 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     var index=0
                     hashMap.forEach {
-                        if(it.key!="logoPath"&&it.key!="fontSize")
+                        if(it.key!="logoPath")
                         {
                             loremX500 += "\n${hashMap["$index"]}"
                             index++
                         }
-
                     }
                     index=0
 
