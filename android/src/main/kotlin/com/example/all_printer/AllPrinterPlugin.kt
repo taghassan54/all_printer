@@ -153,9 +153,9 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 printerObject?.printReyBitmap(logoPath)
 
             printerObject?.printRey(loremX500,35)
-            "print success"
+            return  "print success"
         }catch (e:Exception){
-            "${e.message}"
+           return "Exception: ${e.message}"
         }
 
     }
