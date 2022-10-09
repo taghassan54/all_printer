@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
         };
       });
     } catch (e) {
-print(e.toString());
+print("Error : ${e.toString()}");
     }
     //
     //
@@ -118,7 +118,7 @@ print(e.toString());
             '';
     _allPrinterPlugin.printQrCode(qrData: "data");
 
-    _allPrinterPlugin.printReyFinish();
+    // _allPrinterPlugin.printReyFinish();
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
