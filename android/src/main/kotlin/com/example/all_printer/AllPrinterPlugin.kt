@@ -120,7 +120,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     var index=0
                     hashMap.forEach {
-                        if(it.key!="logoPath"&&it.key!="fontSize")
+                        if(it.key!="logoPath")
                         {
                             loremX500 += "\n${hashMap["$index"]}"
                             index++
@@ -152,10 +152,10 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             if (logoPath != null)
                 printerObject?.printReyBitmap(logoPath)
 
-            printerObject?.printRey(loremX500,35)
-            return  "print success"
+            printerObject?.printRey(loremX500,30)
+            "print success"
         }catch (e:Exception){
-           return "Exception: ${e.message}"
+            "${e.message}"
         }
 
     }
