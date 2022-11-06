@@ -6,20 +6,17 @@ import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.os.Environment
-import android.os.RemoteException
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
+import android.util.Printer
 import com.example.all_printer.SunmiRestaurant.AidlUtil
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
-import com.imin.printerlib.IminPrintUtils
 import com.mobiiot.androidqapi.api.CsPrinter
-import com.mobiiot.androidqapi.api.Utils.AndroidBmpUtil
 import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
 import com.mobiiot.androidqapi.api.Utils.ServiceUtil
-import com.nbbse.mobiprint3.Printer
 import com.sagereal.printer.PrinterInterface
 import java.io.*
 import java.net.URL
@@ -38,13 +35,12 @@ class PrintingMethods {
         var directionValue: kotlin.Int = 0
         var alignmentValue: kotlin.Int = 0
 
-        var mIminPrintUtils: IminPrintUtils? = null
 
 
         var print: Printer? = null
 
         @SuppressLint("StaticFieldLeak")
-        private var mPrinter: wangpos.sdk4.libbasebinder.Printer? = null
+//        private var mPrinter: wangpos.sdk4.libbasebinder.Printer? = null
         private val bloop = false
         private var bthreadrunning = false
         private val printInterfaceService: PrinterInterface? = null
@@ -61,209 +57,20 @@ class PrintingMethods {
     fun initializePrinters() {
 
         Log.d("PosType", Constant.posType)
-        when (Constant.posType) {
-            "MobiPrint" -> {
-                print = Printer.getInstance()
+        try {
+            if (LoginActivity != null) {
+                PrinterServiceUtil.bindService(LoginActivity)
+                ServiceUtil.bindRemoteService(LoginActivity)
+                Log.d("success", "Printer Service Util Started Successfully")
+            } else {
+                Log.e("PrinterNotBound", LoginActivity.toString() + "")
             }
-            "WISENET5" -> {
-                object : Thread() {
-                    override fun run() {
-                        try {
-                            mPrinter =
-                                wangpos.sdk4.libbasebinder.Printer(LoginActivity)
-                            mPrinter!!.setPrintFontType(
-                                LoginActivity,
-                                ""
-                            ) //fonnts/PraduhhTheGreat.ttf
-                        } catch (e: Exception) {
-                            Log.e("Exception Found", "Abbey")
-                        }
-                    }
-                }.start()
-
-                if (!bthreadrunning) {
-                    PrintThread().start()
-                }
-            }
-            "MP3_Plus",
-            "MobiPrint 4+",
-            "MP4",
-            "MobiPrint4_Plus",
-            "Mobiwire MP4",
-            "k80hd_bsp_fwv_512m"
-            -> {
-
-                try {
-                    if (LoginActivity != null) {
-                        PrinterServiceUtil.bindService(LoginActivity)
-                        ServiceUtil.bindRemoteService(LoginActivity)
-                        Log.d("success", "Printer Service Util Started Successfully")
-                    } else {
-                        Log.e("PrinterNotBound", LoginActivity.toString() + "")
-                    }
 
 //                LoginActivity.bindService(getPrintIntent(), serviceConnection, Service.BIND_AUTO_CREATE);
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey Muzamil MP3_Plus", ex.toString() + "")
-                }
-            }
-            "T2mini",
-            "T2mini_s",
-            "T1mini-G",
-            "D2mini" -> {
-                try {
-                    // should add context here
-                    AidlUtil.getInstance().connectPrinterService(LoginActivity)
-                    AidlUtil.getInstance().initPrinter()
-                } catch (ex: java.lang.Exception) {
-                    Log.e("  Exception  ", ex.toString() + "")
-                }
-            }
-
-            "D4-505",
-            "D1",
-            "M2-Max",
-            "Swift 1",
-                "S1",
-            "D1-Pro" -> {
-                Log.e("mIminPrintUtils", "detict")
-                try {
-                    if (mIminPrintUtils == null) {
-                        mIminPrintUtils =
-                            IminPrintUtils.getInstance(LoginActivity)
-                    }
-                    mIminPrintUtils?.initPrinter(
-                        IminPrintUtils.PrintConnectType.USB
-                    )
-                    var status: Int =
-                        mIminPrintUtils?.getPrinterStatus(
-                            IminPrintUtils.PrintConnectType.USB
-                        ) ?:
-                        //针对S1， //0：打印机正常 1：打印机未连接或未上电 3：打印头打开 7：纸尽  8：纸将尽  99：其它错误
-                        Log.d("XGH", " print USB status: ")
-                } catch (exception: Exception) {
-                    Log.e("mIminPrintUtils", exception.message + "")
-                }
-
-            }
-            "M2-Pro" -> {
-                Log.e("XGHXGH mIminPrintUtils", "detict")
-                try {
-                    if (mIminPrintUtils == null) {
-                        mIminPrintUtils =
-                            IminPrintUtils.getInstance(LoginActivity)
-                    }
-                    mIminPrintUtils?.initPrinter(
-                        IminPrintUtils.PrintConnectType.SPI
-                    )
-                    Log.d("XGH", " print SPI status: success")
-                } catch (exception: Exception) {
-                    Log.e("mIminPrintUtils", exception.message + "")
-                }
-            }
-
-            else -> print("I don't know anything about it")
+        } catch (ex: java.lang.Exception) {
+            Log.e("Rey Muzamil MP3_Plus", ex.toString() + "")
         }
     }
-
-
-    class PrintThread : Thread() {
-        override fun run() {
-            try {
-                mPrinter = wangpos.sdk4.libbasebinder.Printer(LoginActivity)
-                mPrinter!!.setPrintFontType(LoginActivity, "") //fonnts/PraduhhTheGreat.ttf
-            } catch (e: java.lang.Exception) {
-                Log.e("Exception Found", "Abbey")
-            }
-            bthreadrunning = true
-            do {
-                try {
-                    mPrinter!!.printInit()
-                    mPrinter!!.clearPrintDataCache()
-                } catch (e: RemoteException) {
-                    e.printStackTrace()
-                }
-            } while (bloop)
-            bthreadrunning = false
-        }
-    }
-
-
-    @Throws(RemoteException::class)
-    fun printSingleLine(line: String) {
-        if (line.length > 31 && !line.startsWith("--------------------------------")) {
-            var i = 0
-            while (i <= line.length) {
-                val start = i
-                var end = i + 31
-                end = Math.min(end, line.length)
-                val temp_line = line.substring(start, end)
-                if (Constant.posType.equals("MP3_Plus") || Constant.posType.equals("MP4") || Constant.posType.equals(
-                        "Mobiwire MP4"
-                    ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
-                ) {
-//                    if(isProbablyArabic(temp_line))
-                    if (Constant.isArabicPrintAllowed) CsPrinter.printText_FullParm(
-                        temp_line,
-                        0,
-                        1,
-                        2,
-                        0,
-                        false,
-                        false
-                    ) else CsPrinter.printText_FullParm(temp_line, 0, 0, 2, 0, false, false)
-                    //                    CsPrinter.printText(temp_line);
-                } else {
-                    if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
-                        temp_line,
-                        25,
-                        wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                        false,
-                        false
-                    ) else mPrinter!!.printString(
-                        temp_line,
-                        25,
-                        wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
-                        false,
-                        false
-                    )
-                }
-                i += 31
-            }
-        } else {
-            if (Constant.posType.equals("MP3_Plus") || Constant.posType.equals("MP4") || Constant.posType.equals(
-                    "Mobiwire MP4"
-                ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
-            ) {
-//                if(isProbablyArabic(line))
-                if (Constant.isArabicPrintAllowed) CsPrinter.printText_FullParm(
-                    line,
-                    0,
-                    1,
-                    2,
-                    0,
-                    false,
-                    false
-                ) else CsPrinter.printText_FullParm(line, 0, 0, 2, 0, false, false)
-                //                CsPrinter.printText(line);
-            } else {
-                if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
-                    line,
-                    25,
-                    wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                    false,
-                    false
-                ) else mPrinter!!.printString(
-                    line,
-                    25,
-                    wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
-                    false,
-                    false
-                )
-            }
-        }
-    }
-
 
     fun isProbablyArabic(s: String): Boolean {
         var i = 0
@@ -288,12 +95,6 @@ class PrintingMethods {
         return lines
     }
 
-    @Throws(RemoteException::class)
-    fun printLine(line: String?) {
-        if (Constant.posType.equals("WISENET5")) for (subline in preprocessLines(
-            line!!
-        )) printSingleLine(subline)
-    }
 
     private fun checkSize(
         arrayList: ArrayList<*>,
@@ -322,188 +123,40 @@ class PrintingMethods {
     fun printRey(string: String) {
         var string = string
 
-
-
-        when (Constant.posType) {
-            "MobiPrint" -> try {
-                print?.printText(string, true)
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception Mobiwire", ex.toString() + "")
-            }
-            "WISENET5" -> try {
-                printLine(string)
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception WiseNet", ex.toString() + "")
-            }
-            "MP4" -> try {
-                if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
-                    directionValue = 1
-                    alignmentValue = 0
-                } else {
-                    directionValue = 0
-                    alignmentValue = 0
-                }
-                if (Build.MODEL == "MobiPrint 4+") {
-                    val temp = StringBuilder()
-                    val arrayList = ArrayList<String>()
-                    arrayList.clear()
-                    temp.setLength(0)
-                    val scan = Scanner(string)
-                    val sb = StringBuilder(string)
-                    while (scan.hasNextLine()) {
-                        val oneLine = scan.nextLine()
-                        arrayList.add(oneLine)
-                        temp.append(
-                            """
+        val temp = StringBuilder()
+        val arrayList = ArrayList<String>()
+        arrayList.clear()
+        temp.setLength(0)
+        val scan = Scanner(string)
+        val sb = StringBuilder(string)
+        while (scan.hasNextLine()) {
+            val oneLine = scan.nextLine()
+            arrayList.add(oneLine)
+            temp.append(
+                """
                             $oneLine
                             
                             """.trimIndent()
-                        )
-                    }
-                    scan.close()
-                    if (arrayList.size > 100) {
-                        var i = 0
-                        while (i < arrayList.size) {
-                            val text: StringBuilder = checkSize(arrayList, temp)
+            )
+        }
+        scan.close()
+        if (arrayList.size > 100) {
+            var i = 0
+            while (i < arrayList.size) {
+                val text: StringBuilder = checkSize(arrayList, temp)
 
-                            //  CsPrinter.printText_FullParam2_r(string, 0, 1, 1, 0, false, false, false);
-                            val result = CsPrinter.printText_FullParam2_r(
-                                text.toString() + "",
-                                0, directionValue, 1, alignmentValue, false, false, false
-                            )
-                            i = i + 100
-                        }
-                    } else {
-                        val result = CsPrinter.printText_FullParam2_r(
-                            string + "",
-                            0, directionValue, 1, alignmentValue, false, false, false
-                        )
-                    }
-                } else {
-                    CsPrinter.printText_FullParm(string, 0, directionValue, 1, 0, false, false)
-                }
-
-
-//                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
-//                        CsPrinter.printText_FullParm(string, 0, 1, 1, 0, false, false);
-//                    } else
-//                        CsPrinter.printText_FullParm(string, 0, 0, 2, 0, false, false);
-//                CsPrinter.printText(string);
-                Log.e("Body Text", string)
-                //                int count = string.split("--------------------------------").length;
-//                Log.e("Length of Data" , string + ":" + string.length() + " : " + count);
-//                PrintLoop(string);
-//                for (String subline : preprocessLines(string))
-//                    printSingleLine(subline);
-//                printInterfaceService.printText(string);
-//                printInterfaceService.printText_size(string, 1);
-//                printInterfaceService.printText_size(string, 3);
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
+                //  CsPrinter.printText_FullParam2_r(string, 0, 1, 1, 0, false, false, false);
+                val result = CsPrinter.printText_FullParam2_r(
+                    text.toString() + "",
+                    0, directionValue, 1, alignmentValue, false, false, false
+                )
+                i = i + 100
             }
-            "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> {
-                Log.d("MobiPrintp", Build.MODEL)
-                try {
-                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
-                        directionValue = 1
-                        alignmentValue = 0
-                    } else {
-                        directionValue = 0
-                        alignmentValue = 0
-                    }
-                    Log.d("MobiPrintp", directionValue.toString() + " :directionValue")
-                    if (Build.MODEL == "MobiPrint 4+") {
-                        val temp = StringBuilder()
-                        val arrayList = ArrayList<String>()
-                        arrayList.clear()
-                        temp.setLength(0)
-                        val scan = Scanner(string)
-                        val sb = StringBuilder(string)
-                        while (scan.hasNextLine()) {
-                            val oneLine = scan.nextLine()
-                            arrayList.add(oneLine)
-                            temp.append(
-                                """
-                                $oneLine
-                                
-                                """.trimIndent()
-                            )
-                        }
-                        scan.close()
-                        Log.d(
-                            "MobiPrintp",
-                            (arrayList.size > 100).toString() + " :arrayList.size()"
-                        )
-                        if (arrayList.size > 100) {
-                            var i = 0
-                            while (i < arrayList.size) {
-                                val text: StringBuilder = checkSize(arrayList, temp)
-                                Log.d("MobiPrintp", "$text :text")
-                                val result = CsPrinter.printText_FullParam2_r(
-                                    text.toString() + "",
-                                    0, directionValue, 1, alignmentValue, false, false, false
-                                )
-                                i = i + 100
-                            }
-                        } else {
-                            try {
-                                string = string.replace("\n\n", "\n \n")
-                                Log.d("string", string.length.toString() + "")
-                                Log.d("MobiPrintp", "$string :string")
-                            } catch (e: java.lang.Exception) {
-                                Log.d("MobiPrintp error", e.message!!)
-                            }
-                            val result = CsPrinter.printText_FullParm(
-                                string + "",
-                                0, directionValue, 1, alignmentValue, false, false
-                            )
-                        }
-                    } else {
-                        if (Build.VERSION.SDK_INT <= 29) {
-                            CsPrinter.printText_FullParm(
-                                string,
-                                0,
-                                directionValue,
-                                1,
-                                0,
-                                false,
-                                false
-                            )
-                            Log.e("CsPrinter Text", CsPrinter.getPrinterStatus().toString() + "")
-                        } else {
-                            CsPrinterQ.printText_FullParm(
-                                string,
-                                0,
-                                directionValue,
-                                1,
-                                0,
-                                false,
-                                false
-                            )
-                        }
-                    }
-                    Log.e("Body Text", string)
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
-                }
-            }
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
-                AidlUtil.getInstance()
-                    .printText(string, 24F, false, false, Constant.isArabicPrintAllowed)
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception Mobiwire", ex.toString() + "")
-            }
-            "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
-
-                mIminPrintUtils!!.setAlignment(0)
-                mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
-                mIminPrintUtils?.setTextSize(22)
-                mIminPrintUtils?.printText(string)
-                mIminPrintUtils?.printAndLineFeed()
-                mIminPrintUtils?.printAndFeedPaper(50)
-//                mIminPrintUtils?.partialCut()
-
-            }
+        } else {
+            val result = CsPrinter.printText_FullParam2_r(
+                string + "",
+                0, directionValue, 1, alignmentValue, false, false, false
+            )
         }
     }
 
@@ -511,81 +164,23 @@ class PrintingMethods {
         try {
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
-            when (Constant.posType) {
-                "MobiPrint" -> print!!.printText(string, size, Constant.isArabicPrintAllowed)
-                "WISENET5" -> try {
-                    if (size == 2) {
-                        if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
-                            string,
-                            35,
-                            wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                            true,
-                            false
-                        ) else mPrinter!!.printString(
-                            string,
-                            35,
-                            wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
-                            true,
-                            false
-                        )
-                    } else printLine(string)
-                } catch (ex: java.lang.Exception) {
-                    Log.e("1 Exception WiseNet", ex.toString() + "")
-                }
-                "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
-                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) CsPrinter.printText_FullParm(
-                        string,
-                        size - 1,
-                        1,
-                        2,
-                        0,
-                        false,
-                        false
-                    ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
 
-//                        Log.e("printReyprintRey 1", CsPrinter.getLastError() + " ");
-//                        Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus() + " ");
-//                        Log.e("printReyprintRey 3", CsPrinter.getCurrentVoltageStatus() + " ");
-//                        Log.e("printReyprintRey 4", CsPrinter.getPaperStatus() + " ");
-//                        Log.e("printReyprintRey 5", CsPrinter.getPowerState() + " ");
-//                        Log.e("printReyprintRey 6", CsPrinter.getTempStatus() + " ");
-//                        Log.e("printReyprintRey 7", CsPrinter.printGetPrintedLength() + " ");
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey Exception MP3_Plus", ex.toString() + "")
-                }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
-                    if (size == 1) AidlUtil.getInstance()
-                        .printText(string, 24F, false, false, Constant.isArabicPrintAllowed) else {
-                        AidlUtil.getInstance()
-                            .printText(string, 36F, true, false, Constant.isArabicPrintAllowed)
-                    }
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey Exception Mobiwire", ex.toString() + "")
-                }
-                "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
-                    Log.e("Printtt", "$size string:$string")
-                    mIminPrintUtils!!.setAlignment(1)
-                    mIminPrintUtils?.setTextSize(26)
-                    mIminPrintUtils?.setTextStyle(Typeface.BOLD)
-                    mIminPrintUtils?.printText(
-                        """
-                        $string
-                        
-                        """.trimIndent()
-                    )
-                } else {
-                    Log.e("Printtt", size.toString() + "")
-                    mIminPrintUtils!!.setAlignment(0)
-                    mIminPrintUtils?.setTextSize(size)
-                    mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
-                    mIminPrintUtils?.printText(
-                        """
-                        $string
-                        
-                        """.trimIndent()
-                    )
-                }
+            try {
+                if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) CsPrinter.printText_FullParm(
+                    string,
+                    size - 1,
+                    1,
+                    2,
+                    0,
+                    false,
+                    false
+                ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
+
+
+            } catch (ex: java.lang.Exception) {
+                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
+
         } catch (ex: java.lang.Exception) {
             Log.e("9 Exception Printtt", ex.toString() + "")
         }
@@ -594,56 +189,23 @@ class PrintingMethods {
     fun printQrCode(bitmap: Bitmap?, string: String?) {
         try {
             Log.e("Constant.posType", Constant.posType.toString() + " QRPint")
-            when (Constant.posType) {
-                "MobiPrint" -> {
-                    Log.e("MobiPrint", Constant.posType.toString() + " QRPint")
 
-                    // convert qr-link invoice to .bmp image file.
-                    // read .bmp image file and print it by print class.
-                    AndroidBmpUtil.save(
-                        CsPrinter.createBarQrCode(string, BarcodeFormat.QR_CODE, 320, 380),
-                        LoginActivity?.getExternalFilesDir(
-                            Environment.DIRECTORY_DOWNLOADS
-                        )?.getPath()
-                            .toString() + "/unzipFolder/files/1/qr.bmp"
-                    )
-                    print?.printBitmap(
-                        LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                            ?.getPath()
-                            .toString() + "/unzipFolder/files/1/qr.bmp"
-                    )
-                }
-                "MP3_Plus", "MobiPrint 4+", "MP4", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
-                    try {
-                        CsPrinter.printBitmap(
-                            CsPrinter.createBarQrCode(
-                                string,
-                                BarcodeFormat.QR_CODE,
-                                384,
-                                384
-                            )
+            try {
+                try {
+                    CsPrinter.printBitmap(
+                        CsPrinter.createBarQrCode(
+                            string,
+                            BarcodeFormat.QR_CODE,
+                            384,
+                            384
                         )
-                    } catch (e: WriterException) {
-                        e.printStackTrace()
-                    }
-                    CsPrinter.printEndLine()
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey Exception MP3_Plus", ex.toString() + "")
+                    )
+                } catch (e: WriterException) {
+                    e.printStackTrace()
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
-                    if (bitmap != null) {
-                        AidlUtil.getInstance().printBitmap(bitmap)
-                        //                            AidlUtil.getInstance().printText("\n", 36, true, false, false);
-//                            cutPaper();
-                        Log.e("Qrcode", "Sucssess 01")
-                    }
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey Exception Sunmi", ex.toString() + "")
-                }
-                "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
-                    mIminPrintUtils!!.printQrCode(string, 1)
-                    mIminPrintUtils!!.printAndFeedPaper(100)
-                }
+                CsPrinter.printEndLine()
+            } catch (ex: java.lang.Exception) {
+                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
 
         } catch (ex: java.lang.Exception) {
@@ -653,38 +215,14 @@ class PrintingMethods {
 
     fun printReyFinish() {
         Log.d("printReyFinish", "called")
-        when (Constant.posType) {
-            "MobiPrint" -> {
-                print!!.printText("\n\n")
-                Log.d("printReyFinish", "hena")
-            }
-            "WISENET5" -> try {
-                mPrinter!!.printPaper(50)
-                mPrinter!!.printFinish()
-            } catch (ex: java.lang.Exception) {
-                Log.e("1 Exception WiseNet", ex.toString() + "")
-            }
-            "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
-                CsPrinter.printText("\n\n\n\n")
-                CsPrinter.printEndLine()
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
-            }
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
-                AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, false)
-                cutPaper()
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
-            }
-            "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
 
-
-                //Log.d("imin int:",""+IminPrintUtils.getInstance(Login.mContext).getPrinterStatus(IminPrintUtils.PrintConnectType.USB));
-                mIminPrintUtils!!.printAndLineFeed()
-                mIminPrintUtils!!.printAndFeedPaper(50)
-                mIminPrintUtils!!.partialCut()
-            }
+        try {
+            CsPrinter.printText("\n\n\n\n")
+            CsPrinter.printEndLine()
+        } catch (ex: java.lang.Exception) {
+            Log.e("Rey Exception MP3_Plus", ex.toString() + "")
         }
+
     }
 
 
@@ -703,157 +241,76 @@ class PrintingMethods {
     fun printReyBitmap(string: String) {
         Log.d("printReyBitmap", "called")
         try {
-            when (Constant.posType) {
-                "MobiPrint" -> print!!.printBitmap(string)
-                "WISENET5" -> {
-                    val options = BitmapFactory.Options()
-                    options.inPreferredConfig = Bitmap.Config.ARGB_8888
-                    val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
-                    mPrinter!!.printImageBase(
-                        bitmap,
-                        400,
-                        200,
-                        wangpos.sdk4.libbasebinder.Printer.Align.CENTER,
-                        0
-                    )
-                }
-                "MP4" -> {
-                    try {
-//                    if(true)
-//                        return;
-//                    Image2();
-                        var file = File(string)
-                        if (!file.exists()) file = File(
-                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                                ?.getPath()
-                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
-                        )
-                        val options = BitmapFactory.Options()
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888
-                        val bitmap =
-                            BitmapFactory.decodeStream(FileInputStream(file), null, options)
-                        val arrayBitmap = ArrayList<Bitmap?>()
-                        val empty: Bitmap =
-                            drawText("", null, 20, true, false, 0, null)
-                        arrayBitmap.add(empty)
-                        arrayBitmap.add(bitmap)
-
-
-//                    Bitmap last = createSingleImageFromMultipleImages(arrayBitmap);
-//                    CsPrinter.printBitmap(file.getPath(),2);
-                        val is_black = FileInputStream(string)
-                        val input: ByteArray = InputStreamToByte(is_black)
-                        CsPrinter.printBitmap(input)
-                        val size = file.length().toInt()
-                        val bytes = ByteArray(size)
-                        try {
-                            val buf = BufferedInputStream(FileInputStream(file))
-                            buf.read(bytes, 0, bytes.size)
-                            buf.close()
-                        } catch (e: FileNotFoundException) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace()
-                        } catch (e: IOException) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace()
-                        }
-                    } catch (ex: java.lang.Exception) {
-                        Log.e("Rey Exception MP3_Plus", ex.toString() + "")
-                    }
-                }
-                "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> {
-                    try {
-                        Log.d("printReyBitmap", "im in right place")
-                        Log.d(
-                            "printReyBitmap",
-                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                                ?.getPath()
-                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
-                        )
-                        printRey("\n", 1)
+            try {
+                Log.d("printReyBitmap", "im in right place")
+                Log.d(
+                    "printReyBitmap",
+                    LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                        ?.getPath()
+                        .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                )
+                printRey("\n", 1)
 
 //                    if(true)
 //                        return;
 //                    Image2();
-                        var file = File(string)
-                        if (!file.exists()) file = File(
-                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                                ?.getPath()
-                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
-                        )
-                        val options = BitmapFactory.Options()
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888
-                        val bitmap =
-                            BitmapFactory.decodeStream(FileInputStream(file), null, options)
-                        val arrayBitmap = ArrayList<Bitmap?>()
-                        val empty: Bitmap =
-                            drawText("", null, 20, true, false, 0, null)
-                        arrayBitmap.add(empty)
-                        arrayBitmap.add(bitmap)
-                        val is_black = FileInputStream(string)
-                        val input: ByteArray = InputStreamToByte(is_black)
-                        CsPrinter.printBitmap(input)
-                        val size = file.length().toInt()
-                        val bytes = ByteArray(size)
-                        try {
-                            val buf = BufferedInputStream(FileInputStream(file))
-                            buf.read(bytes, 0, bytes.size)
-                            buf.close()
-                        } catch (e: FileNotFoundException) {
-                            Log.e("Rey Exception MP3_Plus", e.toString() + "")
+                var file = File(string)
+                if (!file.exists()) file = File(
+                    LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                        ?.getPath()
+                        .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                )
+                val options = BitmapFactory.Options()
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888
+                val bitmap =
+                    BitmapFactory.decodeStream(FileInputStream(file), null, options)
+                val arrayBitmap = ArrayList<Bitmap?>()
+                val empty: Bitmap =
+                    drawText("", null, 20, true, false, 0, null)
+                arrayBitmap.add(empty)
+                arrayBitmap.add(bitmap)
+                val is_black = FileInputStream(string)
+                val input: ByteArray = InputStreamToByte(is_black)
+                CsPrinter.printBitmap(input)
+                val size = file.length().toInt()
+                val bytes = ByteArray(size)
+                try {
+                    val buf = BufferedInputStream(FileInputStream(file))
+                    buf.read(bytes, 0, bytes.size)
+                    buf.close()
+                } catch (e: FileNotFoundException) {
+                    Log.e("Rey Exception MP3_Plus", e.toString() + "")
 
-                            // TODO Auto-generated catch block
-                            e.printStackTrace()
-                        } catch (e: IOException) {
-                            Log.e("Rey Exception MP3_Plus", e.toString() + "")
+                    // TODO Auto-generated catch block
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    Log.e("Rey Exception MP3_Plus", e.toString() + "")
 
-                            // TODO Auto-generated catch block
-                            e.printStackTrace()
-                        }
-                    } catch (ex: java.lang.Exception) {
-                        Log.e("Rey Exception MP3_Plus", ex.toString() + "")
-                    }
-                    try {
-                        Log.e("printReyprintRey 1", CsPrinter.getLastError().toString() + " ")
-                        Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus().toString() + " ")
-                        Log.e(
-                            "printReyprintRey 3",
-                            CsPrinter.getCurrentVoltageStatus().toString() + " "
-                        )
-                        Log.e("printReyprintRey 4", CsPrinter.getPaperStatus().toString() + " ")
-                        Log.e("printReyprintRey 5", CsPrinter.getPowerState().toString() + " ")
-                        Log.e("printReyprintRey 6", CsPrinter.getTempStatus().toString() + " ")
-                        Log.e(
-                            "printReyprintRey 7",
-                            CsPrinter.printGetPrintedLength().toString() + " "
-                        )
-                    } catch (ex: java.lang.Exception) {
-                        Log.e("printReyprintRey", ex.message!!)
-                    }
-                    printRey("\n", 1)
+                    // TODO Auto-generated catch block
+                    e.printStackTrace()
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> {
-                    val options = BitmapFactory.Options()
-                    options.inPreferredConfig = Bitmap.Config.ARGB_8888
-                    val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
-                    AidlUtil.getInstance().printBitmap(bitmap, 0)
-                }
-                "D4-505",
-                "D1",
-                "M2-Pro",
-                "M2-Max",
-                "Swift 1",
-                    "S1",
-                "D1-Pro" -> {
-                    val options = BitmapFactory.Options()
-                    options.inPreferredConfig = Bitmap.Config.RGB_565
-                    var bitmap_black =
-                        BitmapFactory.decodeStream(FileInputStream(string), null, options)
-                    bitmap_black = getBlackWhiteBitmap(bitmap_black)
-                    mIminPrintUtils!!.printSingleBitmap(bitmap_black, 1)
-                    mIminPrintUtils!!.printAndLineFeed()
-                }
+            } catch (ex: java.lang.Exception) {
+                Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
+            try {
+                Log.e("printReyprintRey 1", CsPrinter.getLastError().toString() + " ")
+                Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus().toString() + " ")
+                Log.e(
+                    "printReyprintRey 3",
+                    CsPrinter.getCurrentVoltageStatus().toString() + " "
+                )
+                Log.e("printReyprintRey 4", CsPrinter.getPaperStatus().toString() + " ")
+                Log.e("printReyprintRey 5", CsPrinter.getPowerState().toString() + " ")
+                Log.e("printReyprintRey 6", CsPrinter.getTempStatus().toString() + " ")
+                Log.e(
+                    "printReyprintRey 7",
+                    CsPrinter.printGetPrintedLength().toString() + " "
+                )
+            } catch (ex: java.lang.Exception) {
+                Log.e("printReyprintRey", ex.message!!)
+            }
+            printRey("\n", 1)
+
         } catch (ex: java.lang.Exception) {
             Log.e("1 Exception WiseNet", ex.toString() + "")
         }

@@ -48,21 +48,6 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // IMIN
-    implementation files('libs/IminLibs.jar')
-    implementation files('libs/iminPrinterSDK.jar')
-    implementation files('libs/freeimagelibrary.jar')
-    implementation files('libs/com.nbbse.mobiprint3-v0.5.jar')
-    implementation files('libs/android-async-http-1.4.9.jar')
-
-    implementation files('libs/platform_sdk_v2.3.602.jar')
-    implementation files('libs/bitbucket.jar')
-    implementation files('libs/jxl.jar')
-
-    //New Blue Device NET5
-    implementation files('libs/SDK4BaseBinderV2.1.4.jar')
-    implementation files('libs/SDK4EmvBinderV2.1.4.jar')
-    implementation files('libs/SDK4KeyManagerBinderV2.1.4.jar')
 
     implementation files('libs/cordova-2.2.0.jar')
     implementation files('libs/MobiIotApiAndroidQ.jar')
