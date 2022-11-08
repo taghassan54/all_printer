@@ -44,14 +44,14 @@ class _MyAppState extends State<MyApp> {
 
       setState((){
         invoice = {
-          "0": "The Quick Brown fox jumped over The Lazy Dog",
-          "1": "Date:2022-01-30 10:25:35",
-          "2": "Name: Altkamul Printer Test",
-          "3": "Merchent ID: $merchantId",
+          "0": "Order Station",
+          "1": "Invoice NO : 28",
+          "2": "Date : 2022-01-30 10:25:35.32456789",
+          "3": "Namev: ",
           "4": "Terminal ID: 667766776",
           "5": "Transaction ID: 10000001",
-          "6": "Voucher No: 22-003111",
-          "7": "Car No: 1001k",
+          "6": "Terminal ID: 11111111",
+          "7": "Car No: 1230099862",
           "8": "Customer No: 971512345678",
           "9": "******************************",
           "10": "Tax Invoice",
@@ -134,6 +134,7 @@ print("Error : ${e.toString()}");
   Widget build(BuildContext context) {
 
     return MaterialApp(
+      locale: Locale("ar"),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
@@ -168,6 +169,13 @@ print("Error : ${e.toString()}");
                 ),
               ),
               ElevatedButton(
+                onPressed: () => printTextAr(),
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text("Print Arabic Text", textAlign: TextAlign.center),
+                ),
+              ),
+              ElevatedButton(
                 onPressed: () => printImage(),
                 child: const SizedBox(
                   width: double.infinity,
@@ -179,6 +187,14 @@ print("Error : ${e.toString()}");
                 child: const SizedBox(
                   width: double.infinity,
                   child: Text("Print QrCode", textAlign: TextAlign.center),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => screenShot(),
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text("screen Shot",
+                      textAlign: TextAlign.center),
                 ),
               ),
               ElevatedButton(
@@ -202,6 +218,18 @@ print("Error : ${e.toString()}");
     platformVersion = await _allPrinterPlugin.printSingleLine(
             line:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.") ??
+        '';
+    _allPrinterPlugin.printReyFinish();
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
+  printTextAr() async {
+    String platformVersion = 'starting ... ';
+    await getInvoice();
+    platformVersion = await _allPrinterPlugin.printSingleLine(
+            line:
+                """ هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص. إن كنت تريد أن تستخدم نص لوريم إيبسوم ما، عليك أن تتحقق أولاً أن ليس هناك أي كلمات أو عبارات محرجة أو غير لائقة مخبأة في هذا النص. بينما تعمل جميع مولّدات نصوص لوريم إيبسوم على الإنترنت على إعادة تكرار مقاطع من نص لوريم إيبسوم نفسه عدة مرات بما تتطلبه الحاجة، يقوم مولّدنا هذا باستخدام كلمات من قاموس يحوي على أكثر من 200 كلمة لا تينية، مضاف إليها مجموعة من الجمل النموذجية، لتكوين نص لوريم إيبسوم ذو شكل منطقي قريب إلى النص الحقيقي. وبالتالي يكون النص الناتح خالي من التكرار، أو أي كلمات أو عبارات غير لائقة أو ما شابه. وهذا ما يجعله أول مولّد نص لوريم إيبسوم حقيقي على الإنترنت.  """) ??
         '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
@@ -247,6 +275,14 @@ print("Error : ${e.toString()}");
   getPlatformVersion() async {
     String? platformVersion = 'starting ... ';
     platformVersion = await _allPrinterPlugin.getPlatformVersion();
+    setState(() {
+      _platformVersion = platformVersion!;
+    });
+  }
+
+  screenShot() async{
+    String? platformVersion = 'starting ... ';
+    platformVersion = await _allPrinterPlugin.screenShot();
     setState(() {
       _platformVersion = platformVersion!;
     });

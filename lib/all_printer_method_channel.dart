@@ -50,6 +50,13 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
   }
 
   @override
+  Future<String?> screenShot()async{
+    final screenShotResult = await methodChannel.invokeMethod<String>('screenShot');
+    AppLogger.logDebug("screenShot() : ${screenShotResult.toString()}");
+    return screenShotResult;
+  }
+
+  @override
   Future<String?> printImage(String imagePath)async{
     final printResult = await methodChannel.invokeMethod<String>('printImage',imagePath);
     AppLogger.logDebug("printImage() : ${printResult.toString()}");

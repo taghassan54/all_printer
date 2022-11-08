@@ -14,6 +14,10 @@ import android.util.Printer
 import com.example.all_printer.SunmiRestaurant.AidlUtil
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
+import com.mediatek.settings.service.DeviceInfo
+import com.mobiiot.androidqapi.api.CsDevice
+import com.mobiiot.androidqapi.api.CsLocation
+import com.mobiiot.androidqapi.api.CsOperation
 import com.mobiiot.androidqapi.api.CsPrinter
 import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
 import com.mobiiot.androidqapi.api.Utils.ServiceUtil
@@ -165,21 +169,29 @@ class PrintingMethods {
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
 
+
             try {
                 if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) CsPrinter.printText_FullParm(
                     string,
                     size - 1,
                     1,
-                    2,
+                    1,
                     0,
                     false,
                     false
                 ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
 
-
-            } catch (ex: java.lang.Exception) {
+                Log.e("printReyprintRey 1",  "${ CsPrinter.getLastError()}");
+                Log.e("printReyprintRey 2",   " ${CsPrinter.getPrinterStatus()} ");
+                Log.e("printReyprintRey 3",  " ${CsPrinter.getCurrentVoltageStatus() } ");
+                Log.e("printReyprintRey 4",  " ${CsPrinter.getPaperStatus() } ");
+                Log.e("printReyprintRey 5",  " ${CsPrinter.getPowerState() } ");
+                Log.e("printReyprintRey 6",  " ${CsPrinter.getTempStatus()} ");
+                Log.e("printReyprintRey 7",  " ${CsPrinter.printGetPrintedLength() } ");
+            } catch (ex: Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
+
 
         } catch (ex: java.lang.Exception) {
             Log.e("9 Exception Printtt", ex.toString() + "")
@@ -314,6 +326,29 @@ class PrintingMethods {
         } catch (ex: java.lang.Exception) {
             Log.e("1 Exception WiseNet", ex.toString() + "")
         }
+    }
+
+    fun screenShot(){
+        CsOperation.screenShot()
+    }
+
+    fun enableLocation(){
+        CsLocation.enableLocation()
+    }
+    fun disableLocation(){
+        CsLocation.disableLocation()
+    }
+
+    fun getLocation(): String? {
+       return CsLocation.getLocation()
+    }
+
+    fun getAddress(): String? {
+       return CsLocation.getAddress()
+    }
+
+    fun getDeviceInformation(): DeviceInfo? {
+        return CsDevice.getDeviceInformation()
     }
 
 

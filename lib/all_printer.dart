@@ -9,6 +9,9 @@ class AllPrinter {
   Future<String?> getPlatformVersion() {
     return AllPrinterPlatform.instance.getPlatformVersion();
   }
+Future<String?> screenShot() {
+    return AllPrinterPlatform.instance.screenShot();
+  }
 
   Future<String?> printImage({required String imagePath}) {
     return AllPrinterPlatform.instance.printImage(imagePath);

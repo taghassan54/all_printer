@@ -57,6 +57,12 @@ class MockAllPrinterPlatform
     // TODO: implement printQrCode
     throw UnimplementedError();
   }
+
+  @override
+  Future<String?> screenShot() {
+    // TODO: implement screenShot
+    throw UnimplementedError();
+  }
 }
 
 void main() {

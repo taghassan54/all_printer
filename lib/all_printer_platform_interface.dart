@@ -46,6 +46,10 @@ abstract class AllPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('printImage() has not been implemented.');
   }
 
+  Future<String?> screenShot(){
+    throw UnimplementedError('screenShot() has not been implemented.');
+  }
+
   Future download(Dio dio, String url, String savePath) async {
     throw UnimplementedError('download() has not been implemented.');
   }

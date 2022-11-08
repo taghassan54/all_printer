@@ -19,7 +19,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import androidx.core.content.ContextCompat as Compat
-import com.imin.library.SystemPropManager
 
 
 /** AllPrinterPlugin */
@@ -49,14 +48,18 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
+            "screenShot" -> {
+                printerObject?.screenShot()
+                result.success("success !")
+            }
             "getPlatformVersion" -> {
 
-                val deviceModel: String = SystemPropManager.getModel()
-                val brand = SystemPropManager.getBrand()
+//                val deviceModel: String = SystemPropManager.getModel()
+//                val brand = SystemPropManager.getBrand()
 
                 result.success(
                     "Android ${android.os.Build.VERSION.RELEASE} \n" +
-                            " Device Name : ${getDeviceName()} \n device Model :   $deviceModel \n Brand : $brand"
+                            " Device Name : ${getDeviceName()} "
                 )
 
             }
@@ -82,7 +85,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printRey("${call.arguments}")
+                        printerObject?.printRey("${call.arguments}",1)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -152,7 +155,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             if (logoPath != null)
                 printerObject?.printReyBitmap(logoPath)
 
-            printerObject?.printRey(loremX500,30)
+            printerObject?.printRey(loremX500,1)
             "print success"
         }catch (e:Exception){
             "${e.message}"
