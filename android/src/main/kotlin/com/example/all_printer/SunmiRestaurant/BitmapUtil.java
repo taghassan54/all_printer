@@ -10,6 +10,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -71,7 +72,7 @@ public class BitmapUtil {
         hints.put(EncodeHintType.CHARACTER_SET, "GBK");
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         try {
-            BitMatrix encode = qrCodeWriter.encode(content, barcodeFormat, width, height, hints);
+            BitMatrix encode = qrCodeWriter.encode(content, barcodeFormat, width, height, (Hashtable) hints);
             int[] pixels = new int[width * height];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {

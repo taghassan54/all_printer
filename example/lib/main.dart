@@ -41,34 +41,35 @@ class _MyAppState extends State<MyApp> {
     //
     try {
       // var response = await Dio().get('http://213.159.5.155:410/invoice.json');
-
+var index =0 ;
       setState((){
         invoice = {
-          "0": "The Quick Brown fox jumped over The Lazy Dog",
-          "1": "Date:2022-01-30 10:25:35",
-          "2": "Name: Altkamul Printer Test",
-          "3": "Merchent ID: $merchantId",
-          "4": "Terminal ID: 667766776",
-          "5": "Transaction ID: 10000001",
-          "6": "Voucher No: 22-003111",
-          "7": "Car No: 1001k",
-          "8": "Customer No: 971512345678",
-          "9": "******************************",
-          "10": "Tax Invoice",
-          "11": "******************************",
-          "12": "Title: Exterir Wash Small Car",
-          "13": "service: Wash",
-          "14": "price: 35.00",
-          "15": "qty: 2",
-          "16": "Total Qty: 2",
-          "17": "Total Befor Vat: 70.00 AED",
-          "18": "Vat: @5%: 11.00 AED",
-          "19": "-------------------------------",
-          "20": "Total: 71.00 AED",
-          "21": "******************************",
-          "22": "City: Dubai UAE Call Us : 05123456789",
-          "23": "-------------------------------",
-          "24": "Thanks you for try our Flutter base POS"
+          "$index": "The Quick Brown fox jumped over The Lazy Dog",
+          "${++index}": "السلام عليكم ورحمة الله",
+          "${++index}": "Date:2022-01-30 10:25:35",
+          "${++index}": "Name: Altkamul Printer Test",
+          "${++index}": "Merchent ID: $merchantId",
+          "${++index}": "Terminal ID: 667766776",
+          "${++index}": "Transaction ID: 10000001",
+          "${++index}": "Voucher No: 22-003111",
+          "${++index}": "Car No: 1001k",
+          "${++index}": "Customer No: 971512345678",
+          "${++index}": "******************************",
+          "${++index}": "Tax Invoice",
+          "${++index}": "******************************",
+          "${++index}": "Title: Exterir Wash Small Car",
+          "${++index}": "service: Wash",
+          "${++index}": "price: 35.00",
+          "${++index}": "qty: 2",
+          "${++index}": "Total Qty: 2",
+          "${++index}": "Total Befor Vat: 70.00 AED",
+          "${++index}": "Vat: @5%: 11.00 AED",
+          "${++index}": "-------------------------------",
+          "${++index}": "Total: 71.00 AED",
+          "${++index}": "******************************",
+          "${++index}": "City: Dubai UAE Call Us : 05123456789",
+          "${++index}": "-------------------------------",
+          "${++index}": "Thanks you for try our Flutter base POS"
         };
       });
     } catch (e) {
@@ -168,6 +169,13 @@ print("Error : ${e.toString()}");
                 ),
               ),
               ElevatedButton(
+                onPressed: () => printTextAr(),
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text("Print Arabic Text", textAlign: TextAlign.center),
+                ),
+              ),
+              ElevatedButton(
                 onPressed: () => printImage(),
                 child: const SizedBox(
                   width: double.infinity,
@@ -179,6 +187,13 @@ print("Error : ${e.toString()}");
                 child: const SizedBox(
                   width: double.infinity,
                   child: Text("Print QrCode", textAlign: TextAlign.center),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => _allPrinterPlugin.printReyFinish(),
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text("Print Finish", textAlign: TextAlign.center),
                 ),
               ),
               ElevatedButton(
@@ -202,6 +217,19 @@ print("Error : ${e.toString()}");
     platformVersion = await _allPrinterPlugin.printSingleLine(
             line:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.") ??
+        '';
+    _allPrinterPlugin.printReyFinish();
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
+
+  printTextAr() async {
+    String platformVersion = 'starting ... ';
+    await getInvoice();
+    platformVersion = await _allPrinterPlugin.printSingleLine(
+        line:
+        """ هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص. إن كنت تريد أن تستخدم نص لوريم إيبسوم ما، عليك أن تتحقق أولاً أن ليس هناك أي كلمات أو عبارات محرجة أو غير لائقة مخبأة في هذا النص. بينما تعمل جميع مولّدات نصوص لوريم إيبسوم على الإنترنت على إعادة تكرار مقاطع من نص لوريم إيبسوم نفسه عدة مرات بما تتطلبه الحاجة، يقوم مولّدنا هذا باستخدام كلمات من قاموس يحوي على أكثر من 200 كلمة لا تينية، مضاف إليها مجموعة من الجمل النموذجية، لتكوين نص لوريم إيبسوم ذو شكل منطقي قريب إلى النص الحقيقي. وبالتالي يكون النص الناتح خالي من التكرار، أو أي كلمات أو عبارات غير لائقة أو ما شابه. وهذا ما يجعله أول مولّد نص لوريم إيبسوم حقيقي على الإنترنت.  """) ??
         '';
     _allPrinterPlugin.printReyFinish();
     setState(() {

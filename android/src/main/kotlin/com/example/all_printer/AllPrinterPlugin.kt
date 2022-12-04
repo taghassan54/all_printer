@@ -4,8 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -56,7 +54,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 result.success(
                     "Android ${android.os.Build.VERSION.RELEASE} \n" +
-                            " Device Name : ${getDeviceName()} \n device Model :   $deviceModel \n Brand : $brand"
+                            " Device Name : ${getDeviceName()} \n device Model :   $deviceModel \n Brand : $brand "
                 )
 
             }
@@ -82,7 +80,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printRey("${call.arguments}")
+                        printerObject?.printRey("${call.arguments}",1)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -152,7 +150,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             if (logoPath != null)
                 printerObject?.printReyBitmap(logoPath)
 
-            printerObject?.printRey(loremX500,30)
+            printerObject?.printRey(loremX500,1)
             "print success"
         }catch (e:Exception){
             "${e.message}"
