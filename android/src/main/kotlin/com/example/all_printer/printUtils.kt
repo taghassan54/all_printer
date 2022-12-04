@@ -533,15 +533,16 @@ class PrintingMethods {
                     Log.e("1 Exception WiseNet", ex.toString() + "")
                 }
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
-                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) CsPrinter.printText_FullParm(
-                        string,
-                        size - 1,
-                        1,
-                        2,
-                        0,
-                        false,
-                        false
-                    ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
+                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string))
+                        CsPrinter.printText_FullParm(
+                            string,
+                            size - 1,
+                            1,
+                            1,
+                            0,
+                            false,
+                            false
+                        ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
 
 //                        Log.e("printReyprintRey 1", CsPrinter.getLastError() + " ");
 //                        Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus() + " ");

@@ -120,7 +120,8 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     hashMap.forEach {
                         if(it.key!="logoPath")
                         {
-                            loremX500 += "\n${hashMap["$index"]}"
+//                            loremX500 += "\n${hashMap["$index"]}"
+                            printerObject?.printRey("\n${hashMap["$index"]}",1)
                             index++
                         }
                     }
