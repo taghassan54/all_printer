@@ -55,7 +55,9 @@ var index =0 ;
           "${++index}": "Car No: 1001k",
           "${++index}": "Customer No: 971512345678",
           "${++index}": "******************************",
+          "${++index}": "size:2",
           "${++index}": "Tax Invoice",
+          "${++index}": "size:1",
           "${++index}": "******************************",
           "${++index}": "Title: Exterir Wash Small Car",
           "${++index}": "service: Wash",
@@ -101,7 +103,7 @@ print("Error : ${e.toString()}");
         fullPath);
 
     await getInvoice();
-    // invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
+    invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
 
     if (isDone) {
       invoice['logoPath'] = fullPath;
@@ -119,7 +121,7 @@ print("Error : ${e.toString()}");
             '';
     _allPrinterPlugin.printQrCode(qrData: "data");
 
-    // _allPrinterPlugin.printReyFinish();
+    _allPrinterPlugin.printReyFinish();
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

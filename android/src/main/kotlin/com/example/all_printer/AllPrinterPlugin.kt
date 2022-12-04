@@ -80,7 +80,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printRey("${call.arguments}",1)
+                        printerObject?.printRey("${call.arguments}", 1)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -115,21 +115,36 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     val logoPath = call.argument<String>("logoPath")
 
                     var loremX500 = ""
+                    var textSize = 1
+                    var index = 0
 
-                    var index=0
+                    if (logoPath != null) {
+                        printerObject?.printReyBitmap(logoPath)
+                    }
                     hashMap.forEach {
-                        if(it.key!="logoPath")
-                        {
-//                            loremX500 += "\n${hashMap["$index"]}"
-                            printerObject?.printRey("\n${hashMap["$index"]}",1)
+                        if (it.key != "logoPath") {
+
+                            if ("${hashMap["$index"]}".startsWith(prefix = "size")) {
+                                printRey(loremX500, null, textSize)
+                                textSize = "${hashMap["$index"]}".split(":").last().toInt()
+                                loremX500 = ""
+                            } else {
+                                loremX500 += "\n${hashMap["$index"]}"
+                            }
                             index++
                         }
                     }
-                    index=0
 
-                    Log.d("loremX500", loremX500)
-                    val deviceName = printRey(loremX500, logoPath);
-                    result.success("printer device Name : $deviceName");
+
+                    printRey(loremX500, null, textSize)
+                    loremX500 = ""
+
+                    index = 0
+
+//                    Log.d("loremX500", loremX500)
+//                    val deviceName = printRey(loremX500, logoPath);
+//                    result.success("printer device Name : $deviceName");
+                    result.success("success !");
                 } catch (e: Exception) {
                     result.success("${e.message}");
                 }
@@ -144,16 +159,16 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         channel.setMethodCallHandler(null)
     }
 
-    private fun printRey(loremX500: String, logoPath: String?): String {
+    private fun printRey(loremX500: String, logoPath: String?, textSize: Int): String {
         Log.d("PosType", Constant.posType)
 
         return try {
             if (logoPath != null)
                 printerObject?.printReyBitmap(logoPath)
 
-            printerObject?.printRey(loremX500,1)
+            printerObject?.printRey(loremX500, textSize)
             "print success"
-        }catch (e:Exception){
+        } catch (e: Exception) {
             "${e.message}"
         }
 
