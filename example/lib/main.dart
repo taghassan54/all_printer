@@ -45,6 +45,7 @@ var index =0 ;
       setState((){
         invoice = {
           "$index": "The Quick Brown fox jumped over The Lazy Dog",
+          "${++index}": "hello ",
           "${++index}": "السلام عليكم ورحمة الله",
           "${++index}": "Date:2022-01-30 10:25:35",
           "${++index}": "Name: Altkamul Printer Test",
@@ -68,6 +69,8 @@ var index =0 ;
           "${++index}": "Vat: @5%: 11.00 AED",
           "${++index}": "-------------------------------",
           "${++index}": "Total: 71.00 AED",
+          "${++index}": "******************************",
+          "${++index}": "نص تاني بالعربي",
           "${++index}": "******************************",
           "${++index}": "City: Dubai UAE Call Us : 05123456789",
           "${++index}": "-------------------------------",

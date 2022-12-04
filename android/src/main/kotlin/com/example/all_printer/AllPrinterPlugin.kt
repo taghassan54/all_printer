@@ -128,7 +128,11 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                                 printRey(loremX500, null, textSize)
                                 textSize = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
-                            } else {
+                            } else if(printerObject?.isProbablyArabic("${hashMap["$index"]}") == true){
+                                printRey(loremX500, null, textSize)
+                                printRey("${hashMap["$index"]}", null, textSize)
+                                loremX500 = ""
+                            }else{
                                 loremX500 += "\n${hashMap["$index"]}"
                             }
                             index++
