@@ -157,7 +157,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "serial" -> {
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printReyBitmap("${call.arguments}")
+                        printerObject?.getDevicePos()
                         result.success("success ! ")
                     } catch (e: Exception) {
                         result.success("${e.message}");

@@ -189,6 +189,10 @@ class PrintingMethods {
         }
     }
 
+    fun getDevicePos(): String {
+        val pos = CsDevice.getDeviceInformation()
+        return pos.sim1_imei
+    }
 
     @Throws(RemoteException::class)
     fun printSingleLine(line: String) {
@@ -865,11 +869,6 @@ class PrintingMethods {
     private fun getDeviceName(): String {
         val manufacturer = Build.MANUFACTURER
         return Build.MODEL
-    }
-
-    private fun getDevicePos(): String {
-        val pos = CsDevice.getDeviceInformation()
-        return pos.sim1_imei
     }
 
     fun getBlackWhiteBitmap(bitmap: Bitmap?): Bitmap? {
