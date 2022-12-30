@@ -67,7 +67,7 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
   Future<String?> getDeviceSerial() async {
     final result =
         await methodChannel.invokeMethod<String>('serial');
-    AppLogger.logDebug("printImage() : ${result.toString()}");
+    AppLogger.logDebug("getDeviceSerial() : ${result.toString()}");
     return result;
   }
 

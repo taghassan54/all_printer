@@ -155,15 +155,10 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
 
             "serial" -> {
-                if (call.arguments != null) {
-                    try {
-                        printerObject?.getDevicePos()
-                        result.success("success ! ")
-                    } catch (e: Exception) {
-                        result.success("${e.message}");
-                    }
-                } else {
-                    result.success("serial not found !")
+                try {
+                    result.success(printerObject?.getDevicePos())
+                } catch (e: Exception) {
+                    result.success("${e.message}");
                 }
             }
             else -> {

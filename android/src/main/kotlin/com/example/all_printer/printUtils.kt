@@ -26,6 +26,7 @@ import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
+import java.util.logging.Logger
 
 
 class PrintingMethods {
@@ -190,8 +191,14 @@ class PrintingMethods {
     }
 
     fun getDevicePos(): String {
-        val pos = CsDevice.getDeviceInformation()
-        return pos.sim1_imei
+        try {
+            val pos = CsDevice.getDeviceInformation()
+            Log.e("POS",pos.serial_number);
+            return pos.sim1_imei
+        } catch (e : Exception) {
+            Log.e("POS",e.message ?: "SOME ERROR HAPPENED");
+        }
+        return "NO SERIAL OR SIM IMEI"
     }
 
     @Throws(RemoteException::class)
