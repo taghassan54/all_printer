@@ -163,7 +163,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         result.success("${e.message}");
                     }
                 } else {
-                    result.success("image not found !")
+                    result.success("serial not found !")
                 }
             }
             else -> {
