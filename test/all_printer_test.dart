@@ -57,6 +57,12 @@ class MockAllPrinterPlatform
     // TODO: implement printQrCode
     throw UnimplementedError();
   }
+  
+  @override
+  Future<String?> getDeviceSerial() {
+    // TODO: implement getDeviceSerial
+    throw UnimplementedError();
+  }
 }
 
 void main() {
