@@ -53,8 +53,8 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val brand = SystemPropManager.getBrand()
 
                 result.success(
-                    "Android ${android.os.Build.VERSION.RELEASE} \n" +
-                            " Device Name : ${getDeviceName()} \n device Model :   $deviceModel \n Brand : $brand "
+                        "Android ${android.os.Build.VERSION.RELEASE} \n" +
+                                " Device Name : ${getDeviceName()} \n device Model :   $deviceModel \n Brand : $brand "
                 )
 
             }
@@ -128,11 +128,11 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                                 printRey(loremX500, null, textSize)
                                 textSize = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
-                            } else if(printerObject?.isProbablyArabic("${hashMap["$index"]}") == true){
+                            } else if (printerObject?.isProbablyArabic("${hashMap["$index"]}") == true) {
                                 printRey(loremX500, null, textSize)
                                 printRey("${hashMap["$index"]}", null, textSize)
                                 loremX500 = ""
-                            }else{
+                            } else {
                                 loremX500 += "\n${hashMap["$index"]}"
                             }
                             index++
@@ -149,6 +149,14 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 //                    val deviceName = printRey(loremX500, logoPath);
 //                    result.success("printer device Name : $deviceName");
                     result.success("success !");
+                } catch (e: Exception) {
+                    result.success("${e.message}");
+                }
+            }
+
+            "serial" -> {
+                try {
+                    result.success(printerObject?.getDevicePos())
                 } catch (e: Exception) {
                     result.success("${e.message}");
                 }
@@ -187,16 +195,16 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun checkPermission() {
         if (mContext != null)
             if (Compat.checkSelfPermission(
-                    mContext!!,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) !== PackageManager.PERMISSION_GRANTED
+                            mContext!!,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) !== PackageManager.PERMISSION_GRANTED
             ) {
                 if (activity != null) {
                     ActivityCompat.requestPermissions(
-                        activity!!, arrayOf(
+                            activity!!, arrayOf(
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE
-                        ), 0
+                    ), 0
                     )
                 }
             } else {

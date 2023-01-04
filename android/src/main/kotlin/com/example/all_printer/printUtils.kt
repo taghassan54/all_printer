@@ -15,6 +15,7 @@ import com.example.all_printer.SunmiRestaurant.AidlUtil
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.imin.printerlib.IminPrintUtils
+import com.mobiiot.androidqapi.api.CsDevice
 import com.mobiiot.androidqapi.api.CsPrinter
 import com.mobiiot.androidqapi.api.Utils.AndroidBmpUtil
 import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
@@ -25,6 +26,7 @@ import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
+import java.util.logging.Logger
 
 
 class PrintingMethods {
@@ -70,10 +72,10 @@ class PrintingMethods {
                     override fun run() {
                         try {
                             mPrinter =
-                                wangpos.sdk4.libbasebinder.Printer(LoginActivity)
+                                    wangpos.sdk4.libbasebinder.Printer(LoginActivity)
                             mPrinter!!.setPrintFontType(
-                                LoginActivity,
-                                ""
+                                    LoginActivity,
+                                    ""
                             ) //fonnts/PraduhhTheGreat.ttf
                         } catch (e: Exception) {
                             Log.e("Exception Found", "Abbey")
@@ -124,23 +126,23 @@ class PrintingMethods {
             "D1",
             "M2-Max",
             "Swift 1",
-                "S1",
+            "S1",
             "D1-Pro" -> {
                 Log.e("mIminPrintUtils", "detict")
                 try {
                     if (mIminPrintUtils == null) {
                         mIminPrintUtils =
-                            IminPrintUtils.getInstance(LoginActivity)
+                                IminPrintUtils.getInstance(LoginActivity)
                     }
                     mIminPrintUtils?.initPrinter(
-                        IminPrintUtils.PrintConnectType.USB
+                            IminPrintUtils.PrintConnectType.USB
                     )
                     var status: Int =
-                        mIminPrintUtils?.getPrinterStatus(
-                            IminPrintUtils.PrintConnectType.USB
-                        ) ?:
-                        //针对S1， //0：打印机正常 1：打印机未连接或未上电 3：打印头打开 7：纸尽  8：纸将尽  99：其它错误
-                        Log.d("XGH", " print USB status: ")
+                            mIminPrintUtils?.getPrinterStatus(
+                                    IminPrintUtils.PrintConnectType.USB
+                            ) ?:
+                            //针对S1， //0：打印机正常 1：打印机未连接或未上电 3：打印头打开 7：纸尽  8：纸将尽  99：其它错误
+                            Log.d("XGH", " print USB status: ")
                 } catch (exception: Exception) {
                     Log.e("mIminPrintUtils", exception.message + "")
                 }
@@ -151,10 +153,10 @@ class PrintingMethods {
                 try {
                     if (mIminPrintUtils == null) {
                         mIminPrintUtils =
-                            IminPrintUtils.getInstance(LoginActivity)
+                                IminPrintUtils.getInstance(LoginActivity)
                     }
                     mIminPrintUtils?.initPrinter(
-                        IminPrintUtils.PrintConnectType.SPI
+                            IminPrintUtils.PrintConnectType.SPI
                     )
                     Log.d("XGH", " print SPI status: success")
                 } catch (exception: Exception) {
@@ -188,6 +190,16 @@ class PrintingMethods {
         }
     }
 
+    fun getDevicePos(): String {
+        try {
+            val pos = CsDevice.getDeviceInformation()
+            Log.e("POS",pos.serial_number);
+            return pos.sim1_imei
+        } catch (e : Exception) {
+            Log.e("POS",e.message ?: "SOME ERROR HAPPENED");
+        }
+        return "NO SERIAL OR SIM IMEI"
+    }
 
     @Throws(RemoteException::class)
     fun printSingleLine(line: String) {
@@ -199,66 +211,66 @@ class PrintingMethods {
                 end = Math.min(end, line.length)
                 val temp_line = line.substring(start, end)
                 if (Constant.posType.equals("MP3_Plus") || Constant.posType.equals("MP4") || Constant.posType.equals(
-                        "Mobiwire MP4"
-                    ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
+                                "Mobiwire MP4"
+                        ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
                 ) {
 //                    if(isProbablyArabic(temp_line))
                     if (Constant.isArabicPrintAllowed) CsPrinter.printText_FullParm(
-                        temp_line,
-                        0,
-                        1,
-                        2,
-                        0,
-                        false,
-                        false
+                            temp_line,
+                            0,
+                            1,
+                            2,
+                            0,
+                            false,
+                            false
                     ) else CsPrinter.printText_FullParm(temp_line, 0, 0, 2, 0, false, false)
                     //                    CsPrinter.printText(temp_line);
                 } else {
                     if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
-                        temp_line,
-                        25,
-                        wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                        false,
-                        false
+                            temp_line,
+                            25,
+                            wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
+                            false,
+                            false
                     ) else mPrinter!!.printString(
-                        temp_line,
-                        25,
-                        wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
-                        false,
-                        false
+                            temp_line,
+                            25,
+                            wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
+                            false,
+                            false
                     )
                 }
                 i += 31
             }
         } else {
             if (Constant.posType.equals("MP3_Plus") || Constant.posType.equals("MP4") || Constant.posType.equals(
-                    "Mobiwire MP4"
-                ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
+                            "Mobiwire MP4"
+                    ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
             ) {
 //                if(isProbablyArabic(line))
                 if (Constant.isArabicPrintAllowed) CsPrinter.printText_FullParm(
-                    line,
-                    0,
-                    1,
-                    2,
-                    0,
-                    false,
-                    false
+                        line,
+                        0,
+                        1,
+                        2,
+                        0,
+                        false,
+                        false
                 ) else CsPrinter.printText_FullParm(line, 0, 0, 2, 0, false, false)
                 //                CsPrinter.printText(line);
             } else {
                 if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
-                    line,
-                    25,
-                    wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                    false,
-                    false
+                        line,
+                        25,
+                        wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
+                        false,
+                        false
                 ) else mPrinter!!.printString(
-                    line,
-                    25,
-                    wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
-                    false,
-                    false
+                        line,
+                        25,
+                        wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
+                        false,
+                        false
                 )
             }
         }
@@ -291,19 +303,19 @@ class PrintingMethods {
     @Throws(RemoteException::class)
     fun printLine(line: String?) {
         if (Constant.posType.equals("WISENET5")) for (subline in preprocessLines(
-            line!!
+                line!!
         )) printSingleLine(subline)
     }
 
     private fun checkSize(
-        arrayList: ArrayList<*>,
-        temp: java.lang.StringBuilder
+            arrayList: ArrayList<*>,
+            temp: java.lang.StringBuilder
     ): StringBuilder {
         if (arrayList.size > 100) {
             temp.setLength(0)
             for (i in 0..99) {
                 temp.append(
-                    """
+                        """
                     ${arrayList[i]}
                     
                     """.trimIndent()
@@ -311,7 +323,7 @@ class PrintingMethods {
                 arrayList.removeAt(i)
             }
         } else for (i in arrayList.indices) temp.append(
-            """
+                """
             ${arrayList[i]}
             
             """.trimIndent()
@@ -354,7 +366,7 @@ class PrintingMethods {
                         val oneLine = scan.nextLine()
                         arrayList.add(oneLine)
                         temp.append(
-                            """
+                                """
                             $oneLine
                             
                             """.trimIndent()
@@ -368,15 +380,15 @@ class PrintingMethods {
 
                             //  CsPrinter.printText_FullParam2_r(string, 0, 1, 1, 0, false, false, false);
                             val result = CsPrinter.printText_FullParam2_r(
-                                text.toString() + "",
-                                0, directionValue, 1, alignmentValue, false, false, false
+                                    text.toString() + "",
+                                    0, directionValue, 1, alignmentValue, false, false, false
                             )
                             i = i + 100
                         }
                     } else {
                         val result = CsPrinter.printText_FullParam2_r(
-                            string + "",
-                            0, directionValue, 1, alignmentValue, false, false, false
+                                string + "",
+                                0, directionValue, 1, alignmentValue, false, false, false
                         )
                     }
                 } else {
@@ -423,7 +435,7 @@ class PrintingMethods {
                             val oneLine = scan.nextLine()
                             arrayList.add(oneLine)
                             temp.append(
-                                """
+                                    """
                                 $oneLine
                                 
                                 """.trimIndent()
@@ -431,8 +443,8 @@ class PrintingMethods {
                         }
                         scan.close()
                         Log.d(
-                            "MobiPrintp",
-                            (arrayList.size > 100).toString() + " :arrayList.size()"
+                                "MobiPrintp",
+                                (arrayList.size > 100).toString() + " :arrayList.size()"
                         )
                         if (arrayList.size > 100) {
                             var i = 0
@@ -440,8 +452,8 @@ class PrintingMethods {
                                 val text: StringBuilder = checkSize(arrayList, temp)
                                 Log.d("MobiPrintp", "$text :text")
                                 val result = CsPrinter.printText_FullParam2_r(
-                                    text.toString() + "",
-                                    0, directionValue, 1, alignmentValue, false, false, false
+                                        text.toString() + "",
+                                        0, directionValue, 1, alignmentValue, false, false, false
                                 )
                                 i = i + 100
                             }
@@ -454,31 +466,31 @@ class PrintingMethods {
                                 Log.d("MobiPrintp error", e.message!!)
                             }
                             val result = CsPrinter.printText_FullParm(
-                                string + "",
-                                0, directionValue, 1, alignmentValue, false, false
+                                    string + "",
+                                    0, directionValue, 1, alignmentValue, false, false
                             )
                         }
                     } else {
                         if (Build.VERSION.SDK_INT <= 29) {
                             CsPrinter.printText_FullParm(
-                                string,
-                                0,
-                                directionValue,
-                                1,
-                                0,
-                                false,
-                                false
+                                    string,
+                                    0,
+                                    directionValue,
+                                    1,
+                                    0,
+                                    false,
+                                    false
                             )
                             Log.e("CsPrinter Text", CsPrinter.getPrinterStatus().toString() + "")
                         } else {
                             CsPrinterQ.printText_FullParm(
-                                string,
-                                0,
-                                directionValue,
-                                1,
-                                0,
-                                false,
-                                false
+                                    string,
+                                    0,
+                                    directionValue,
+                                    1,
+                                    0,
+                                    false,
+                                    false
                             )
                         }
                     }
@@ -489,11 +501,11 @@ class PrintingMethods {
             }
             "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
                 AidlUtil.getInstance()
-                    .printText(string, 24F, false, false, Constant.isArabicPrintAllowed)
+                        .printText(string, 24F, false, false, Constant.isArabicPrintAllowed)
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception Mobiwire", ex.toString() + "")
             }
-            "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
+            "D4-505", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
 
                 mIminPrintUtils!!.setAlignment(0)
                 mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
@@ -516,17 +528,17 @@ class PrintingMethods {
                 "WISENET5" -> try {
                     if (size == 2) {
                         if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
-                            string,
-                            35,
-                            wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                            true,
-                            false
+                                string,
+                                35,
+                                wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
+                                true,
+                                false
                         ) else mPrinter!!.printString(
-                            string,
-                            35,
-                            wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
-                            true,
-                            false
+                                string,
+                                35,
+                                wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
+                                true,
+                                false
                         )
                     } else printLine(string)
                 } catch (ex: java.lang.Exception) {
@@ -535,13 +547,13 @@ class PrintingMethods {
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     if (Constant.isArabicPrintAllowed || isProbablyArabic(string))
                         CsPrinter.printText_FullParm(
-                            string,
-                            size - 1,
-                            1,
-                            1,
-                            0,
-                            false,
-                            false
+                                string,
+                                size - 1,
+                                1,
+                                1,
+                                0,
+                                false,
+                                false
                         ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
 
 //                        Log.e("printReyprintRey 1", CsPrinter.getLastError() + " ");
@@ -556,20 +568,20 @@ class PrintingMethods {
                 }
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
                     if (size == 1) AidlUtil.getInstance()
-                        .printText(string, 24F, false, false, Constant.isArabicPrintAllowed) else {
+                            .printText(string, 24F, false, false, Constant.isArabicPrintAllowed) else {
                         AidlUtil.getInstance()
-                            .printText(string, 36F, true, false, Constant.isArabicPrintAllowed)
+                                .printText(string, 36F, true, false, Constant.isArabicPrintAllowed)
                     }
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
-                "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
+                "D4-505", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
                     mIminPrintUtils!!.setAlignment(1)
                     mIminPrintUtils?.setTextSize(26)
                     mIminPrintUtils?.setTextStyle(Typeface.BOLD)
                     mIminPrintUtils?.printText(
-                        """
+                            """
                         $string
                         
                         """.trimIndent()
@@ -580,7 +592,7 @@ class PrintingMethods {
                     mIminPrintUtils?.setTextSize(size)
                     mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
                     mIminPrintUtils?.printText(
-                        """
+                            """
                         $string
                         
                         """.trimIndent()
@@ -602,27 +614,27 @@ class PrintingMethods {
                     // convert qr-link invoice to .bmp image file.
                     // read .bmp image file and print it by print class.
                     AndroidBmpUtil.save(
-                        CsPrinter.createBarQrCode(string, BarcodeFormat.QR_CODE, 320, 380),
-                        LoginActivity?.getExternalFilesDir(
-                            Environment.DIRECTORY_DOWNLOADS
-                        )?.getPath()
-                            .toString() + "/unzipFolder/files/1/qr.bmp"
+                            CsPrinter.createBarQrCode(string, BarcodeFormat.QR_CODE, 320, 380),
+                            LoginActivity?.getExternalFilesDir(
+                                    Environment.DIRECTORY_DOWNLOADS
+                            )?.getPath()
+                                    .toString() + "/unzipFolder/files/1/qr.bmp"
                     )
                     print?.printBitmap(
-                        LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                            ?.getPath()
-                            .toString() + "/unzipFolder/files/1/qr.bmp"
+                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                    ?.getPath()
+                                    .toString() + "/unzipFolder/files/1/qr.bmp"
                     )
                 }
                 "MP3_Plus", "MobiPrint 4+", "MP4", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     try {
                         CsPrinter.printBitmap(
-                            CsPrinter.createBarQrCode(
-                                string,
-                                BarcodeFormat.QR_CODE,
-                                384,
-                                384
-                            )
+                                CsPrinter.createBarQrCode(
+                                        string,
+                                        BarcodeFormat.QR_CODE,
+                                        384,
+                                        384
+                                )
                         )
                     } catch (e: WriterException) {
                         e.printStackTrace()
@@ -641,7 +653,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
                 }
-                "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
+                "D4-505", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
                     mIminPrintUtils!!.printQrCode(string, 1)
                     mIminPrintUtils!!.printAndFeedPaper(100)
                 }
@@ -677,7 +689,7 @@ class PrintingMethods {
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
-            "D4-505", "D1", "M2-Max", "Swift 1","S1", "M2-Pro", "D1-Pro" -> {
+            "D4-505", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
 
 
                 //Log.d("imin int:",""+IminPrintUtils.getInstance(Login.mContext).getPrinterStatus(IminPrintUtils.PrintConnectType.USB));
@@ -711,11 +723,11 @@ class PrintingMethods {
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     mPrinter!!.printImageBase(
-                        bitmap,
-                        400,
-                        200,
-                        wangpos.sdk4.libbasebinder.Printer.Align.CENTER,
-                        0
+                            bitmap,
+                            400,
+                            200,
+                            wangpos.sdk4.libbasebinder.Printer.Align.CENTER,
+                            0
                     )
                 }
                 "MP4" -> {
@@ -725,17 +737,17 @@ class PrintingMethods {
 //                    Image2();
                         var file = File(string)
                         if (!file.exists()) file = File(
-                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                                ?.getPath()
-                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                                LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                        ?.getPath()
+                                        .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
                         val options = BitmapFactory.Options()
                         options.inPreferredConfig = Bitmap.Config.ARGB_8888
                         val bitmap =
-                            BitmapFactory.decodeStream(FileInputStream(file), null, options)
+                                BitmapFactory.decodeStream(FileInputStream(file), null, options)
                         val arrayBitmap = ArrayList<Bitmap?>()
                         val empty: Bitmap =
-                            drawText("", null, 20, true, false, 0, null)
+                                drawText("", null, 20, true, false, 0, null)
                         arrayBitmap.add(empty)
                         arrayBitmap.add(bitmap)
 
@@ -766,10 +778,10 @@ class PrintingMethods {
                     try {
                         Log.d("printReyBitmap", "im in right place")
                         Log.d(
-                            "printReyBitmap",
-                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                                ?.getPath()
-                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                                "printReyBitmap",
+                                LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                        ?.getPath()
+                                        .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
                         printRey("\n", 1)
 
@@ -778,17 +790,17 @@ class PrintingMethods {
 //                    Image2();
                         var file = File(string)
                         if (!file.exists()) file = File(
-                            LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                                ?.getPath()
-                                .toString() + "/unzipFolder/files/10001002/logo.bmp"
+                                LoginActivity?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                        ?.getPath()
+                                        .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
                         val options = BitmapFactory.Options()
                         options.inPreferredConfig = Bitmap.Config.ARGB_8888
                         val bitmap =
-                            BitmapFactory.decodeStream(FileInputStream(file), null, options)
+                                BitmapFactory.decodeStream(FileInputStream(file), null, options)
                         val arrayBitmap = ArrayList<Bitmap?>()
                         val empty: Bitmap =
-                            drawText("", null, 20, true, false, 0, null)
+                                drawText("", null, 20, true, false, 0, null)
                         arrayBitmap.add(empty)
                         arrayBitmap.add(bitmap)
                         val is_black = FileInputStream(string)
@@ -818,15 +830,15 @@ class PrintingMethods {
                         Log.e("printReyprintRey 1", CsPrinter.getLastError().toString() + " ")
                         Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus().toString() + " ")
                         Log.e(
-                            "printReyprintRey 3",
-                            CsPrinter.getCurrentVoltageStatus().toString() + " "
+                                "printReyprintRey 3",
+                                CsPrinter.getCurrentVoltageStatus().toString() + " "
                         )
                         Log.e("printReyprintRey 4", CsPrinter.getPaperStatus().toString() + " ")
                         Log.e("printReyprintRey 5", CsPrinter.getPowerState().toString() + " ")
                         Log.e("printReyprintRey 6", CsPrinter.getTempStatus().toString() + " ")
                         Log.e(
-                            "printReyprintRey 7",
-                            CsPrinter.printGetPrintedLength().toString() + " "
+                                "printReyprintRey 7",
+                                CsPrinter.printGetPrintedLength().toString() + " "
                         )
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
@@ -844,12 +856,12 @@ class PrintingMethods {
                 "M2-Pro",
                 "M2-Max",
                 "Swift 1",
-                    "S1",
+                "S1",
                 "D1-Pro" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.RGB_565
                     var bitmap_black =
-                        BitmapFactory.decodeStream(FileInputStream(string), null, options)
+                            BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     bitmap_black = getBlackWhiteBitmap(bitmap_black)
                     mIminPrintUtils!!.printSingleBitmap(bitmap_black, 1)
                     mIminPrintUtils!!.printAndLineFeed()
@@ -982,13 +994,13 @@ class PrintingMethods {
     }
 
     fun drawText(
-        text: String?,
-        textTwo: String?,
-        textSize: Int,
-        isBold: Boolean,
-        isUnderline: Boolean,
-        align: Int,
-        ttf: Typeface?
+            text: String?,
+            textTwo: String?,
+            textSize: Int,
+            isBold: Boolean,
+            isUnderline: Boolean,
+            align: Int,
+            ttf: Typeface?
     ): Bitmap {
         var text = text
         val textWidth = 384
@@ -1000,8 +1012,8 @@ class PrintingMethods {
             text = text1 + text2
         }
         val textPaint = TextPaint(
-            Paint.ANTI_ALIAS_FLAG
-                    or Paint.LINEAR_TEXT_FLAG
+                Paint.ANTI_ALIAS_FLAG
+                        or Paint.LINEAR_TEXT_FLAG
         )
         textPaint.style = Paint.Style.FILL
         textPaint.color = Color.BLACK
@@ -1011,24 +1023,24 @@ class PrintingMethods {
         textPaint.typeface = ttf
         if (isUnderline) textPaint.flags = Paint.UNDERLINE_TEXT_FLAG
         var mTextLayout = StaticLayout(
-            text, textPaint,
-            textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false
+                text, textPaint,
+                textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false
         )
         if (align == 0) mTextLayout = StaticLayout(
-            text, textPaint,
-            textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false
+                text, textPaint,
+                textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false
         ) else if (align == 1) mTextLayout = StaticLayout(
-            text, textPaint,
-            textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false
+                text, textPaint,
+                textWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0.0f, false
         ) else if (align == 2) mTextLayout = StaticLayout(
-            text, textPaint,
-            textWidth, Layout.Alignment.ALIGN_OPPOSITE, 1.0f, 0.0f, false
+                text, textPaint,
+                textWidth, Layout.Alignment.ALIGN_OPPOSITE, 1.0f, 0.0f, false
         )
         val b = Bitmap.createBitmap(textWidth, mTextLayout.height, Bitmap.Config.RGB_565)
         val c = Canvas(b)
         val paint = Paint(
-            (Paint.ANTI_ALIAS_FLAG
-                    or Paint.LINEAR_TEXT_FLAG)
+                (Paint.ANTI_ALIAS_FLAG
+                        or Paint.LINEAR_TEXT_FLAG)
         )
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
@@ -1069,7 +1081,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "Swift 1","S1", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1077,7 +1089,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "Swift 1","S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
