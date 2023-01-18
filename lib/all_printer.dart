@@ -36,7 +36,7 @@ class AllPrinter {
     }
   }
 
-  // # logo image # w=348  h=133 dep =24  B&W
+  // # logo image # w=348  h=133 dep =24 dpi =120 B&W
   Future download(Dio dio, String url, String savePath) async {
     // if(!(await Permission.storage.isGranted)){
     //   await Permission.storage.request();
