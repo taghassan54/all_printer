@@ -45,12 +45,26 @@ String imageOnlineUrl = "https://raw.githubusercontent.com/taghassan54/printer/m
         imageOnlineUrl,
         generatedLocalPath);
         
-await _allPrinterPlugin.printImage(imagePath: path) ?? '';
+await _allPrinterPlugin.printImage(imagePath: generatedLocalPath) ?? '';
         
           // Finish Printing give white space and cut paper (if it available)
              _allPrinterPlugin.printReyFinish();
         
 ```
+ # print Images
+ prepare image from Local File  
+```
+
+String imageLocalUrl = "/mnt/sdcard/Pictures/printing.bmp";
+
+        
+await _allPrinterPlugin.printImage(imagePath: imageLocalUrl) ?? '';
+        
+          // Finish Printing give white space and cut paper (if it available)
+             _allPrinterPlugin.printReyFinish();
+        
+```
+
   # print Invoice
  ```
         var index =0 ;
