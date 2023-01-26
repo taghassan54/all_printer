@@ -1,13 +1,22 @@
 # printer
 
+# 
+## Use this package as a library
+Run this command:
+
+With Flutter:
 ```
   all_printer:
     git:
       url: https://github.com/taghassan54/all_printer.git
       ref: master # branch name
 ```
-## import 
 
+```
+  flutter pub get
+```
+## Import it 
+Now in your Dart code, you can use:
 ```
 import 'package:all_printer/all_printer.dart';
 ```
