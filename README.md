@@ -106,25 +106,29 @@ await _allPrinterPlugin.printImage(imagePath: imageLocalUrl) ?? '';
          
          await _allPrinterPlugin.print(invoice: invoice) ?? '';
          
-         await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
-            '';
+         await _allPrinterPlugin.printSingleLine(line: "this normal text !") ?? '';
             // Finish Printing give white space and cut paper (if it available)
              _allPrinterPlugin.printReyFinish();
             
 ```
 # Print Text 
 ```
-await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
-            '';
+    await _allPrinterPlugin.printSingleLine(line: "this normal text !") ?? '';
 ```
 
 # Print QRcode
 ```            
-         _allPrinterPlugin.printQrCode(qrData: "data");
-
+     _allPrinterPlugin.printQrCode(qrData: "data");
 ```
+
+# Get Device Serial 
+only for mp4+ and mobiwire devices
+```            
+     String serial=await _allPrinterPlugin.getDeviceSerial();
+```
+
 # Finish Printing
 ```
-          _allPrinterPlugin.printReyFinish();
+      _allPrinterPlugin.printReyFinish();
         
 ```
