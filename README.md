@@ -28,24 +28,30 @@ import 'package:all_printer/all_printer.dart';
  Dio dio =Dio();
  
 ```
- # Images
- prepare image from url 
-```
-> logo image  width=348  height=133 depth =24 dpi =120 black and white
+ # print Images
+ prepare image from url  
+ 
+  important notice >> logo image  width=348  height=133 depth =24 dpi =120 black and white
 
  for image print use this :
- 
- String path = await _allPrinterPlugin.getDownloadPath("unique name");
+```
+
+String imageOnlineUrl = "https://raw.githubusercontent.com/taghassan54/printer/main/printing.bmp";
+
+ String generatedLocalPath = await _allPrinterPlugin.getDownloadPath("unique name");
  
  bool isDone = await _allPrinterPlugin.download(
         dio,
-        "https://raw.githubusercontent.com/taghassan54/printer/main/printing.bmp",
-        path);
+        imageOnlineUrl,
+        generatedLocalPath);
         
 await _allPrinterPlugin.printImage(imagePath: path) ?? '';
         
+          // Finish Printing give white space and cut paper (if it available)
+             _allPrinterPlugin.printReyFinish();
+        
 ```
-  #      
+  # print Invoice
  ```
         var index =0 ;
         dynamic  invoice = {
@@ -88,13 +94,22 @@ await _allPrinterPlugin.printImage(imagePath: path) ?? '';
          
          await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
             '';
+            // Finish Printing give white space and cut paper (if it available)
+             _allPrinterPlugin.printReyFinish();
+            
 ```
-#
+# Print Text 
+```
+await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
+            '';
+```
+
+# Print QRcode
 ```            
          _allPrinterPlugin.printQrCode(qrData: "data");
 
 ```
-#
+# Finish Printing
 ```
           _allPrinterPlugin.printReyFinish();
         
