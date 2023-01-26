@@ -28,10 +28,10 @@ import 'package:all_printer/all_printer.dart';
  Dio dio =Dio();
  
 ```
- #
+ # Images
+ prepare image from url 
 ```
-
->  image  width=348  height=133 depth =24  black and white
+> logo image  width=348  height=133 depth =24 dpi =120 black and white
 
  for image print use this :
  
