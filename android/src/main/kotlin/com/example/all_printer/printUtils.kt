@@ -554,7 +554,7 @@ class PrintingMethods {
                                 textAlign,
                                 false,
                                 false
-                        ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
+                        ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, textAlign, false, false)
 
 //                        Log.e("printReyprintRey 1", CsPrinter.getLastError() + " ");
 //                        Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus() + " ");
