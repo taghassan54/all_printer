@@ -783,7 +783,7 @@ class PrintingMethods {
                                         ?.getPath()
                                         .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 1)
+                        printRey("\n", 1,0)
 
 //                    if(true)
 //                        return;
@@ -843,7 +843,7 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 1)
+                    printRey("\n", 1,0)
                 }
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> {
                     val options = BitmapFactory.Options()

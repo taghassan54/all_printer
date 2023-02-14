@@ -80,7 +80,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printRey("${call.arguments}", 1)
+                        printerObject?.printRey("${call.arguments}", 1,0)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -144,7 +144,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     }
 
 
-                    printRey(loremX500, null, textSize)
+                    printRey(loremX500, null, textSize,textAlign)
                     loremX500 = ""
 
                     index = 0
