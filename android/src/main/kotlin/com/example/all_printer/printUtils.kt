@@ -736,7 +736,7 @@ class PrintingMethods {
 
 
     private fun cutPaper() {
-        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" , "T2s"
+        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s"
         ) {
             try {
                 AidlUtil.woyouService.cutPaper(null)
