@@ -520,7 +520,7 @@ class PrintingMethods {
         }
     }
 
-    fun printRey(string: String, size: Int) {
+    fun printRey(string: String, size: Int, textAlign: Int) {
         try {
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
@@ -552,10 +552,10 @@ class PrintingMethods {
                                 size - 1,
                                 1,
                                 1,
-                                0,
+                                textAlign,
                                 false,
                                 false
-                        ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, 0, false, false)
+                        ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, textAlign, false, false)
 
 //                        Log.e("printReyprintRey 1", CsPrinter.getLastError() + " ");
 //                        Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus() + " ");
@@ -784,7 +784,7 @@ class PrintingMethods {
                                         ?.getPath()
                                         .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 1)
+                        printRey("\n", 1,0)
 
 //                    if(true)
 //                        return;
@@ -844,7 +844,7 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 1)
+                    printRey("\n", 1,0)
                 }
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> {
                     val options = BitmapFactory.Options()
