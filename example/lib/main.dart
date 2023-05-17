@@ -90,6 +90,7 @@ print("Error : ${e.toString()}");
   @override
   void initState() {
     // _allPrinterPlugin.getPermission();
+    _allPrinterPlugin.getDeviceSerial();
     super.initState();
   }
 

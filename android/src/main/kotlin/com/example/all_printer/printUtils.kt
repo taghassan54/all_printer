@@ -211,9 +211,10 @@ class PrintingMethods {
                 "T2mini_s",
                 "T1mini-G",
                 "D2mini" , "T2s" -> {
-                    val pos = AidlUtil.getInstance().getPrinterInfo()
-                    Log.e("POS", pos[0]);
-                    return pos[0]
+                    val pos = AidlUtil.getInstance().sn
+                    Log.e("POS", pos);
+                    val modifiedStr = pos.replace(Regex("[^0-9]"), "")
+                    return modifiedStr
                 }
                 "D4-505",
                 "D4",

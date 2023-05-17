@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.all_printer.R;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -346,5 +347,40 @@ public class AidlUtil {
             res = -1;
         }
         return res;
+    }
+    public String getSN() {
+        String serial = null;
+        Class<?> c = null;
+        try {
+            c = Class.forName("android.os.SystemProperties");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Method get = null;
+        try {
+            get = c.getMethod("get", String.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                serial = (String)get.invoke(c, "ro.sunmi.serial");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return serial;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            serial = Build.getSerial();
+            return serial;
+        } else {
+            //安卓8以下使用Build.SERIAL相同方式
+            //return Build.SERIAL;
+            try {
+                serial = (String) get.invoke(c, "ro.serialno");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return serial;
+        }
     }
 }
