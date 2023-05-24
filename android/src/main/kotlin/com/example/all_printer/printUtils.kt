@@ -27,7 +27,6 @@ import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
-import java.util.logging.Logger
 
 
 class PrintingMethods {
@@ -211,11 +210,10 @@ class PrintingMethods {
                 "T2mini",
                 "T2mini_s",
                 "T1mini-G",
-                "D2mini" , "T2s" -> {
+                "D2mini", "T2s" -> {
                     val pos = AidlUtil.getInstance().sn
                     Log.e("POS", pos);
-                    val modifiedStr = pos.replace(Regex("[^0-9]"), "")
-                    return modifiedStr
+                    return pos.replace(Regex("[^0-9]"), "")
                 }
                 "D4-505",
                 "D4",
@@ -225,7 +223,9 @@ class PrintingMethods {
                 "S1",
                 "D1-Pro",
                 "M2-Pro" -> {
-                    return SystemPropManager.getSn()
+                    val pos = SystemPropManager.getSn()
+                    Log.e("POS", pos);
+                    return pos.replace(Regex("[^0-9]"), "")
                 }
                 else -> return ""
             }
