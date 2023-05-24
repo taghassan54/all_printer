@@ -14,6 +14,7 @@ import android.util.Log
 import com.example.all_printer.SunmiRestaurant.AidlUtil
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
+import com.imin.library.SystemPropManager
 import com.imin.printerlib.IminPrintUtils
 import com.mobiiot.androidqapi.api.CsDevice
 import com.mobiiot.androidqapi.api.CsPrinter
@@ -222,11 +223,9 @@ class PrintingMethods {
                 "M2-Max",
                 "Swift 1",
                 "S1",
-                "D1-Pro" -> {
-                    return ""
-                }
+                "D1-Pro",
                 "M2-Pro" -> {
-                    return ""
+                    return SystemPropManager.getSn()
                 }
                 else -> return ""
             }
