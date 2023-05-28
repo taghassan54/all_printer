@@ -877,7 +877,7 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 1, 0)
+                    printRey("\n", 1, 0,1)
                 }
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> {
                     val options = BitmapFactory.Options()
