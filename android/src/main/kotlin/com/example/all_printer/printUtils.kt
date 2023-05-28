@@ -817,7 +817,7 @@ class PrintingMethods {
                                         ?.getPath()
                                         .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 1, 0)
+                        printRey("\n", 1, 0,1)
 
 //                    if(true)
 //                        return;
