@@ -553,7 +553,7 @@ class PrintingMethods {
         }
     }
 
-    fun printRey(string: String, size: Int, textAlign: Int,textDirection:Int=1) {
+    fun printRey(string: String, size: Int, textAlign: Int,textDirection:Int) {
         try {
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
