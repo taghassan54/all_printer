@@ -14,6 +14,7 @@ import android.util.Log
 import com.example.all_printer.SunmiRestaurant.AidlUtil
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
+import com.imin.library.SystemPropManager
 import com.imin.printerlib.IminPrintUtils
 import com.mobiiot.androidqapi.api.CsDevice
 import com.mobiiot.androidqapi.api.CsPrinter
@@ -26,7 +27,6 @@ import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
-import java.util.logging.Logger
 
 
 class PrintingMethods {
@@ -112,7 +112,7 @@ class PrintingMethods {
             "T2mini",
             "T2mini_s",
             "T1mini-G",
-            "D2mini" -> {
+            "D2mini" , "T2s" -> {
                 try {
                     // should add context here
                     AidlUtil.getInstance().connectPrinterService(LoginActivity)
@@ -193,11 +193,44 @@ class PrintingMethods {
 
     fun getDevicePos(): String {
         try {
-            val pos = CsDevice.getDeviceInformation()
-            Log.e("POS",pos.serial_number);
-            return pos.sim1_imei
-        } catch (e : Exception) {
-            Log.e("POS",e.message ?: "SOME ERROR HAPPENED");
+            when (Constant.posType) {
+                "MobiPrint",
+                "WISENET5",
+                "MP3_Plus",
+                "MobiPrint 4+",
+                "MP4",
+                "MobiPrint4_Plus",
+                "Mobiwire MP4",
+                "k80hd_bsp_fwv_512m"
+                -> {
+                    val pos = CsDevice.getDeviceInformation()
+                    Log.e("POS", pos.serial_number);
+                    return pos.sim1_imei
+                }
+                "T2mini",
+                "T2mini_s",
+                "T1mini-G",
+                "D2mini", "T2s" -> {
+                    val pos = AidlUtil.getInstance().sn
+                    Log.e("POS", pos);
+                    return pos.replace(Regex("[^0-9]"), "")
+                }
+                "D4-505",
+                "D4",
+                "D1",
+                "M2-Max",
+                "Swift 1",
+                "S1",
+                "D1-Pro",
+                "M2-Pro" -> {
+                    val pos = SystemPropManager.getSn()
+                    Log.e("POS", pos);
+                    return pos.replace(Regex("[^0-9]"), "")
+                }
+                else -> return ""
+            }
+        } catch (e: Exception) {
+            Log.e("POS", e.message ?: "SOME ERROR HAPPENED");
         }
         return "NO SERIAL OR SIM IMEI"
     }
@@ -500,13 +533,13 @@ class PrintingMethods {
                     Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
                 }
             }
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
                 AidlUtil.getInstance()
                         .printText(string, 24F, false, false, Constant.isArabicPrintAllowed)
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception Mobiwire", ex.toString() + "")
             }
-            "D4-505","D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
+            "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
 
                 mIminPrintUtils!!.setAlignment(0)
                 mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
@@ -567,7 +600,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
                     if (size == 1) AidlUtil.getInstance()
                             .printText(string, 24F, false, false, Constant.isArabicPrintAllowed) else {
                         AidlUtil.getInstance()
@@ -576,7 +609,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
-                "D4-505","D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
+                "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
                     mIminPrintUtils!!.setAlignment(1)
                     mIminPrintUtils?.setTextSize(26)
@@ -644,7 +677,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
                     if (bitmap != null) {
                         AidlUtil.getInstance().printBitmap(bitmap)
                         //                            AidlUtil.getInstance().printText("\n", 36, true, false, false);
@@ -684,13 +717,13 @@ class PrintingMethods {
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> try {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
                 AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, false)
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
-            "D4-505","D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
+            "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
 
 
                 //Log.d("imin int:",""+IminPrintUtils.getInstance(Login.mContext).getPrinterStatus(IminPrintUtils.PrintConnectType.USB));
@@ -703,7 +736,7 @@ class PrintingMethods {
 
 
     private fun cutPaper() {
-        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini"
+        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s"
         ) {
             try {
                 AidlUtil.woyouService.cutPaper(null)
@@ -784,7 +817,7 @@ class PrintingMethods {
                                         ?.getPath()
                                         .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 1,0)
+                        printRey("\n", 1, 0)
 
 //                    if(true)
 //                        return;
@@ -844,9 +877,9 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 1,0)
+                    printRey("\n", 1, 0)
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" -> {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
@@ -1083,7 +1116,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505",  "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1091,7 +1124,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "D4-505","D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
