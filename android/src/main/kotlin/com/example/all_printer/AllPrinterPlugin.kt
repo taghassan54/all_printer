@@ -117,6 +117,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     var loremX500 = ""
                     var textSize = 1
                     var textAlign = 0
+                    var textDirection = 1
                     var index = 0
 
                     if (logoPath != null) {
@@ -125,16 +126,20 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     hashMap.forEach {
                         if (it.key != "logoPath") {
                             if ("${hashMap["$index"]}".startsWith(prefix = "align")) {
-                                printRey(loremX500, null, textSize,textAlign)
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
                                 textAlign = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
+                            }else if ("${hashMap["$index"]}".startsWith(prefix = "dir")) {
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
+                                textDirection = "${hashMap["$index"]}".split(":").last().toInt()
+                                loremX500 = ""
                             } else if ("${hashMap["$index"]}".startsWith(prefix = "size")) {
-                                printRey(loremX500, null, textSize,textAlign)
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
                                 textSize = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
                             } else if (printerObject?.isProbablyArabic("${hashMap["$index"]}") == true) {
-                                printRey(loremX500, null, textSize,textAlign)
-                                printRey("${hashMap["$index"]}", null, textSize,textAlign)
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
+                                printRey("${hashMap["$index"]}", null, textSize,textAlign,textDirection)
                                 loremX500 = ""
                             } else {
                                 loremX500 += "\n${hashMap["$index"]}"
@@ -144,7 +149,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     }
 
 
-                    printRey(loremX500, null, textSize,textAlign)
+                    printRey(loremX500, null, textSize,textAlign,textDirection)
                     loremX500 = ""
 
                     index = 0
@@ -175,14 +180,14 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         channel.setMethodCallHandler(null)
     }
 
-    private fun printRey(loremX500: String, logoPath: String?, textSize: Int, textAlign: Int): String {
+    private fun printRey(loremX500: String, logoPath: String?, textSize: Int, textAlign: Int,textDirection: Int=1): String {
         Log.d("PosType", Constant.posType)
 
         return try {
             if (logoPath != null)
                 printerObject?.printReyBitmap(logoPath)
 
-            printerObject?.printRey(loremX500, textSize,textAlign)
+            printerObject?.printRey(loremX500, textSize,textAlign,textDirection,)
             "print success"
         } catch (e: Exception) {
             "${e.message}"

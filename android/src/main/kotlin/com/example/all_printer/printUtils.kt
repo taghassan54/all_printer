@@ -553,7 +553,7 @@ class PrintingMethods {
         }
     }
 
-    fun printRey(string: String, size: Int, textAlign: Int) {
+    fun printRey(string: String, size: Int, textAlign: Int,textDirection:Int=1) {
         try {
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
@@ -583,7 +583,7 @@ class PrintingMethods {
                         CsPrinter.printText_FullParm(
                                 string,
                                 size - 1,
-                                1,
+                            textDirection,
                                 1,
                                 textAlign,
                                 false,
