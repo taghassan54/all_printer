@@ -583,7 +583,7 @@ class PrintingMethods {
                         CsPrinter.printText_FullParm(
                                 string,
                                 size - 1,
-                            textDirection,
+                            1,
                                 1,
                                 textAlign,
                                 false,
