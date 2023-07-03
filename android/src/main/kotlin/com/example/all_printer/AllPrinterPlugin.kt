@@ -108,7 +108,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 try {
 
-                    result.success("printer device Name : none")
+//                    result.success("printer device Name : none")
 
                     val hashMap = call.arguments as HashMap<*, *>
 
@@ -159,7 +159,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 //                    result.success("printer device Name : $deviceName");
                     result.success("success !");
                 } catch (e: Exception) {
-                    result.success("${e.message}");
+                    result.success(" Print Exception : ${e.message}");
                 }
             }
 
