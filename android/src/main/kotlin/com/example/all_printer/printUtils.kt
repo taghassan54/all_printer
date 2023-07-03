@@ -611,7 +611,7 @@ class PrintingMethods {
                 }
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
-                    mIminPrintUtils!!.setAlignment(1)
+                    mIminPrintUtils!!.setAlignment(0)
                     mIminPrintUtils?.setTextSize(26)
                     mIminPrintUtils?.setTextStyle(Typeface.BOLD)
                     mIminPrintUtils?.printText(
@@ -622,15 +622,26 @@ class PrintingMethods {
                     )
                 } else {
                     Log.e("Printtt", size.toString() + "")
+//                    mIminPrintUtils!!.setAlignment(0)
+//                    mIminPrintUtils?.setTextSize(size)
+//                    mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
+//                    mIminPrintUtils?.printText(
+//                            """
+//                        $string
+//
+//                        """.trimIndent()
+//                    )
+
                     mIminPrintUtils!!.setAlignment(0)
-                    mIminPrintUtils?.setTextSize(size)
+                    mIminPrintUtils?.setTextSize(23)
                     mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
                     mIminPrintUtils?.printText(
-                            """
+                        """
                         $string
                         
                         """.trimIndent()
                     )
+
                 }
             }
         } catch (ex: java.lang.Exception) {
