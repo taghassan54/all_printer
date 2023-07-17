@@ -147,6 +147,7 @@ class PrintingMethods {
                             ) ?:
                             //针对S1， //0：打印机正常 1：打印机未连接或未上电 3：打印头打开 7：纸尽  8：纸将尽  99：其它错误
                             Log.d("XGH", " print USB status: ")
+                    checkIminPrinter()
                 } catch (exception: Exception) {
                     Log.e("mIminPrintUtils", exception.message + "")
                 }
@@ -566,10 +567,12 @@ class PrintingMethods {
         }
     }
     fun checkIminPrinter() {
-        if (Build.MANUFACTURER.equals("Imin")) {
+        if (Build.MANUFACTURER.equals("Imin") && Build.MANUFACTURER.equals("neostra") && Build.MANUFACTURER.equals("IMIN")) {
             return
         }
-        Log.e("MANUFACTURER", Build.MANUFACTURER);
+        Log.e("MANUFACTURER", Build.MANUFACTURER)
+        Log.e("BOARD", Build.BOARD)
+        Log.e("BRAND", Build.BRAND)
 
         if (mIminPrintUtils!!.printPower === false) {
             Thread {
