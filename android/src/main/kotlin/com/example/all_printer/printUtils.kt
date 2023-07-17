@@ -567,14 +567,14 @@ class PrintingMethods {
         }
     }
     fun checkIminPrinter() {
-        if (Build.MANUFACTURER.equals("Imin") && Build.MANUFACTURER.equals("neostra") && Build.MANUFACTURER.equals("IMIN")) {
+        if (Build.MANUFACTURER.equals("neostra")) {
             return
         }
         Log.e("MANUFACTURER", Build.MANUFACTURER)
         Log.e("BOARD", Build.BOARD)
         Log.e("BRAND", Build.BRAND)
 
-        if (mIminPrintUtils!!.printPower === false) {
+        if (mIminPrintUtils!!.printPower) {
             Thread {
                 try {
                     mIminPrintUtils!!.openPower()
@@ -583,16 +583,16 @@ class PrintingMethods {
                 }
             }.start()
         }
-        if (mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB) === -1) {
-            Thread {
-                try {
-                    mIminPrintUtils!!.resetDevice()
-                    mIminPrintUtils!!.initPrinter(IminPrintUtils.PrintConnectType.USB)
-                    Log.e("IMINY", mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB).toString())
-                } catch (e: java.lang.Exception) {
-                }
-            }.start()
-        }
+//        if (mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB) === -1) {
+//            Thread {
+//                try {
+//                    mIminPrintUtils!!.resetDevice()
+//                    mIminPrintUtils!!.initPrinter(IminPrintUtils.PrintConnectType.USB)
+//                    Log.e("IMINY", mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB).toString())
+//                } catch (e: java.lang.Exception) {
+//                }
+//            }.start()
+//        }
     }
     fun printRey(string: String, size: Int, textAlign: Int, textDirection: Int) {
         try {
@@ -656,7 +656,7 @@ class PrintingMethods {
 
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
-                    mIminPrintUtils!!.setAlignment(0)
+                    mIminPrintUtils!!.setAlignment(1)
                     mIminPrintUtils?.setTextSize(26)
                     mIminPrintUtils?.setTextStyle(Typeface.BOLD)
                     mIminPrintUtils?.printText(
@@ -667,15 +667,6 @@ class PrintingMethods {
                     )
                 } else {
                     Log.e("Printtt", size.toString() + "")
-//                    mIminPrintUtils!!.setAlignment(0)
-//                    mIminPrintUtils?.setTextSize(size)
-//                    mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
-//                    mIminPrintUtils?.printText(
-//                            """
-//                        $string
-//
-//                        """.trimIndent()
-//                    )
                     mIminPrintUtils!!.setAlignment(0)
                     mIminPrintUtils?.setTextSize(22)
                     mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
