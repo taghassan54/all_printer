@@ -67,6 +67,7 @@ class PrintingMethods {
             "MobiPrint" -> {
                 print = Printer.getInstance()
             }
+
             "WISENET5" -> {
                 object : Thread() {
                     override fun run() {
@@ -87,6 +88,7 @@ class PrintingMethods {
                     PrintThread().start()
                 }
             }
+
             "MP3_Plus",
             "MobiPrint 4+",
             "MP4",
@@ -109,10 +111,11 @@ class PrintingMethods {
                     Log.e("Rey Muzamil MP3_Plus", ex.toString() + "")
                 }
             }
+
             "T2mini",
             "T2mini_s",
             "T1mini-G",
-            "D2mini" , "T2s" -> {
+            "D2mini", "T2s" -> {
                 try {
                     // should add context here
                     AidlUtil.getInstance().connectPrinterService(LoginActivity)
@@ -149,6 +152,7 @@ class PrintingMethods {
                 }
 
             }
+
             "M2-Pro" -> {
                 Log.e("XGHXGH mIminPrintUtils", "detict")
                 try {
@@ -207,6 +211,7 @@ class PrintingMethods {
                     Log.e("POS", pos.serial_number);
                     return pos.sim1_imei
                 }
+
                 "T2mini",
                 "T2mini_s",
                 "T1mini-G",
@@ -215,6 +220,7 @@ class PrintingMethods {
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
                 }
+
                 "D4-505",
                 "D4",
                 "D1",
@@ -227,6 +233,7 @@ class PrintingMethods {
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
                 }
+
                 else -> return ""
             }
         } catch (e: Exception) {
@@ -366,6 +373,7 @@ class PrintingMethods {
     }
 
     fun printRey(string: String) {
+        checkIminPrinter()
         var string = string
 
 
@@ -376,11 +384,13 @@ class PrintingMethods {
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception Mobiwire", ex.toString() + "")
             }
+
             "WISENET5" -> try {
                 printLine(string)
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception WiseNet", ex.toString() + "")
             }
+
             "MP4" -> try {
                 if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
                     directionValue = 1
@@ -447,6 +457,7 @@ class PrintingMethods {
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
             }
+
             "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> {
                 Log.d("MobiPrintp", Build.MODEL)
                 try {
@@ -533,12 +544,14 @@ class PrintingMethods {
                     Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
                 }
             }
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
+
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
                 AidlUtil.getInstance()
                         .printText(string, 24F, false, false, Constant.isArabicPrintAllowed)
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception Mobiwire", ex.toString() + "")
             }
+
             "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
 
                 mIminPrintUtils!!.setAlignment(0)
@@ -552,9 +565,35 @@ class PrintingMethods {
             }
         }
     }
+    fun checkIminPrinter() {
+        if (Build.MANUFACTURER.equals("Imin")) {
+            return
+        }
+        Log.e("MANUFACTURER", Build.MANUFACTURER);
 
-    fun printRey(string: String, size: Int, textAlign: Int,textDirection:Int) {
+        if (mIminPrintUtils!!.printPower === false) {
+            Thread {
+                try {
+                    mIminPrintUtils!!.openPower()
+                    Log.e("IMINY", mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB).toString())
+                } catch (e: java.lang.Exception) {
+                }
+            }.start()
+        }
+        if (mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB) === -1) {
+            Thread {
+                try {
+                    mIminPrintUtils!!.resetDevice()
+                    mIminPrintUtils!!.initPrinter(IminPrintUtils.PrintConnectType.USB)
+                    Log.e("IMINY", mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB).toString())
+                } catch (e: java.lang.Exception) {
+                }
+            }.start()
+        }
+    }
+    fun printRey(string: String, size: Int, textAlign: Int, textDirection: Int) {
         try {
+            checkIminPrinter()
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
             when (Constant.posType) {
@@ -578,12 +617,13 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("1 Exception WiseNet", ex.toString() + "")
                 }
+
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     if (Constant.isArabicPrintAllowed || isProbablyArabic(string))
                         CsPrinter.printText_FullParm(
                                 string,
                                 size - 1,
-                            1,
+                                1,
                                 1,
                                 textAlign,
                                 false,
@@ -600,7 +640,8 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
+
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
                     if (size == 1) AidlUtil.getInstance()
                             .printText(string, 24F, false, false, Constant.isArabicPrintAllowed) else {
                         AidlUtil.getInstance()
@@ -609,6 +650,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
+
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
                     mIminPrintUtils!!.setAlignment(0)
@@ -631,12 +673,11 @@ class PrintingMethods {
 //
 //                        """.trimIndent()
 //                    )
-
                     mIminPrintUtils!!.setAlignment(0)
-                    mIminPrintUtils?.setTextSize(23)
+                    mIminPrintUtils?.setTextSize(22)
                     mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
                     mIminPrintUtils?.printText(
-                        """
+                            """
                         $string
                         
                         """.trimIndent()
@@ -651,6 +692,7 @@ class PrintingMethods {
 
     fun printQrCode(bitmap: Bitmap?, string: String?) {
         try {
+            checkIminPrinter()
             Log.e("Constant.posType", Constant.posType.toString() + " QRPint")
             when (Constant.posType) {
                 "MobiPrint" -> {
@@ -671,6 +713,7 @@ class PrintingMethods {
                                     .toString() + "/unzipFolder/files/1/qr.bmp"
                     )
                 }
+
                 "MP3_Plus", "MobiPrint 4+", "MP4", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     try {
                         CsPrinter.printBitmap(
@@ -688,7 +731,8 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
+
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
                     if (bitmap != null) {
                         AidlUtil.getInstance().printBitmap(bitmap)
                         //                            AidlUtil.getInstance().printText("\n", 36, true, false, false);
@@ -698,6 +742,7 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
                 }
+
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
                     mIminPrintUtils!!.printQrCode(string, 1)
                     mIminPrintUtils!!.printAndFeedPaper(100)
@@ -711,29 +756,34 @@ class PrintingMethods {
 
     fun printReyFinish() {
         Log.d("printReyFinish", "called")
+        checkIminPrinter()
         when (Constant.posType) {
             "MobiPrint" -> {
                 print!!.printText("\n\n")
                 Log.d("printReyFinish", "hena")
             }
+
             "WISENET5" -> try {
                 mPrinter!!.printPaper(50)
                 mPrinter!!.printFinish()
             } catch (ex: java.lang.Exception) {
                 Log.e("1 Exception WiseNet", ex.toString() + "")
             }
+
             "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                 CsPrinter.printText("\n\n\n\n")
                 CsPrinter.printEndLine()
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> try {
+
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
                 AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, false)
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
+
             "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
 
 
@@ -760,6 +810,7 @@ class PrintingMethods {
 
     fun printReyBitmap(string: String) {
         Log.d("printReyBitmap", "called")
+        checkIminPrinter()
         try {
             when (Constant.posType) {
                 "MobiPrint" -> print!!.printBitmap(string)
@@ -775,6 +826,7 @@ class PrintingMethods {
                             0
                     )
                 }
+
                 "MP4" -> {
                     try {
 //                    if(true)
@@ -819,6 +871,7 @@ class PrintingMethods {
                         Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                     }
                 }
+
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> {
                     try {
                         Log.d("printReyBitmap", "im in right place")
@@ -828,7 +881,7 @@ class PrintingMethods {
                                         ?.getPath()
                                         .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 1, 0,1)
+                        printRey("\n", 1, 0, 1)
 
 //                    if(true)
 //                        return;
@@ -888,14 +941,16 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 1, 0,1)
+                    printRey("\n", 1, 0, 1)
                 }
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s" -> {
+
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     AidlUtil.getInstance().printBitmap(bitmap, 0)
                 }
+
                 "D4-505",
                 "D4",
                 "D1",
@@ -1127,7 +1182,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1135,7 +1190,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini" , "T2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
