@@ -63,6 +63,7 @@ class PrintingMethods {
     fun initializePrinters() {
 
         Log.d("PosType", Constant.posType)
+        Log.d("ALL PRINTER CHANGELOGS", "0.0.1")
         when (Constant.posType) {
             "MobiPrint" -> {
                 print = Printer.getInstance()
@@ -567,7 +568,7 @@ class PrintingMethods {
         }
     }
     fun checkIminPrinter() {
-        if (Build.MANUFACTURER.equals("neostra")) {
+        if (!Build.MANUFACTURER.equals("neostra")) {
             return
         }
         Log.e("MANUFACTURER", Build.MANUFACTURER)
