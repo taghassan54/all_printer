@@ -27,6 +27,7 @@ import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
+import kotlin.jvm.internal.Intrinsics.Kotlin
 
 
 class PrintingMethods {
@@ -567,6 +568,7 @@ class PrintingMethods {
             }
         }
     }
+
     fun checkIminPrinter() {
         if (!Build.MANUFACTURER.equals("neostra")) {
             return
@@ -595,6 +597,7 @@ class PrintingMethods {
 //            }.start()
 //        }
     }
+
     fun printRey(string: String, size: Int, textAlign: Int, textDirection: Int) {
         try {
             checkIminPrinter()
@@ -646,10 +649,13 @@ class PrintingMethods {
                 }
 
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
+                    val alignment: kotlin.Int = if (textAlign == 0) {
+                         (if (Constant.isArabicPrintAllowed) 2 else 0)
+                    } else textAlign
                     if (size == 1) AidlUtil.getInstance()
-                            .printText(string, 24F, false, false, Constant.isArabicPrintAllowed) else {
+                            .printText(string, 24F, false, false, alignment) else {
                         AidlUtil.getInstance()
-                                .printText(string, 36F, true, false, Constant.isArabicPrintAllowed)
+                                .printText(string, 36F, true, false, alignment)
                     }
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
