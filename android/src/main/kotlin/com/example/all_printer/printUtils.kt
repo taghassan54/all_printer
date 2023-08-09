@@ -375,200 +375,6 @@ class PrintingMethods {
         return temp
     }
 
-    fun printRey(string: String) {
-        checkIminPrinter()
-        var string = string
-
-
-
-        when (Constant.posType) {
-            "MobiPrint" -> try {
-                print?.printText(string, true)
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception Mobiwire", ex.toString() + "")
-            }
-
-            "WISENET5" -> try {
-                printLine(string)
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception WiseNet", ex.toString() + "")
-            }
-
-            "MP4" -> try {
-                if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
-                    directionValue = 1
-                    alignmentValue = 0
-                } else {
-                    directionValue = 0
-                    alignmentValue = 0
-                }
-                if (Build.MODEL == "MobiPrint 4+") {
-                    val temp = StringBuilder()
-                    val arrayList = ArrayList<String>()
-                    arrayList.clear()
-                    temp.setLength(0)
-                    val scan = Scanner(string)
-                    val sb = StringBuilder(string)
-                    while (scan.hasNextLine()) {
-                        val oneLine = scan.nextLine()
-                        arrayList.add(oneLine)
-                        temp.append(
-                                """
-                            $oneLine
-                            
-                            """.trimIndent()
-                        )
-                    }
-                    scan.close()
-                    if (arrayList.size > 100) {
-                        var i = 0
-                        while (i < arrayList.size) {
-                            val text: StringBuilder = checkSize(arrayList, temp)
-
-                            //  CsPrinter.printText_FullParam2_r(string, 0, 1, 1, 0, false, false, false);
-                            val result = CsPrinter.printText_FullParam2_r(
-                                    text.toString() + "",
-                                    0, directionValue, 1, alignmentValue, false, false, false
-                            )
-                            i = i + 100
-                        }
-                    } else {
-                        val result = CsPrinter.printText_FullParam2_r(
-                                string + "",
-                                0, directionValue, 1, alignmentValue, false, false, false
-                        )
-                    }
-                } else {
-                    CsPrinter.printText_FullParm(string, 0, directionValue, 1, 0, false, false)
-                }
-
-
-//                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
-//                        CsPrinter.printText_FullParm(string, 0, 1, 1, 0, false, false);
-//                    } else
-//                        CsPrinter.printText_FullParm(string, 0, 0, 2, 0, false, false);
-//                CsPrinter.printText(string);
-                Log.e("Body Text", string)
-                //                int count = string.split("--------------------------------").length;
-//                Log.e("Length of Data" , string + ":" + string.length() + " : " + count);
-//                PrintLoop(string);
-//                for (String subline : preprocessLines(string))
-//                    printSingleLine(subline);
-//                printInterfaceService.printText(string);
-//                printInterfaceService.printText_size(string, 1);
-//                printInterfaceService.printText_size(string, 3);
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
-            }
-
-            "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> {
-                Log.d("MobiPrintp", Build.MODEL)
-                try {
-                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string)) {
-                        directionValue = 1
-                        alignmentValue = 0
-                    } else {
-                        directionValue = 0
-                        alignmentValue = 0
-                    }
-                    Log.d("MobiPrintp", directionValue.toString() + " :directionValue")
-                    if (Build.MODEL == "MobiPrint 4+") {
-                        val temp = StringBuilder()
-                        val arrayList = ArrayList<String>()
-                        arrayList.clear()
-                        temp.setLength(0)
-                        val scan = Scanner(string)
-                        val sb = StringBuilder(string)
-                        while (scan.hasNextLine()) {
-                            val oneLine = scan.nextLine()
-                            arrayList.add(oneLine)
-                            temp.append(
-                                    """
-                                $oneLine
-                                
-                                """.trimIndent()
-                            )
-                        }
-                        scan.close()
-                        Log.d(
-                                "MobiPrintp",
-                                (arrayList.size > 100).toString() + " :arrayList.size()"
-                        )
-                        if (arrayList.size > 100) {
-                            var i = 0
-                            while (i < arrayList.size) {
-                                val text: StringBuilder = checkSize(arrayList, temp)
-                                Log.d("MobiPrintp", "$text :text")
-                                val result = CsPrinter.printText_FullParam2_r(
-                                        text.toString() + "",
-                                        0, directionValue, 1, alignmentValue, false, false, false
-                                )
-                                i = i + 100
-                            }
-                        } else {
-                            try {
-                                string = string.replace("\n\n", "\n \n")
-                                Log.d("string", string.length.toString() + "")
-                                Log.d("MobiPrintp", "$string :string")
-                            } catch (e: java.lang.Exception) {
-                                Log.d("MobiPrintp error", e.message!!)
-                            }
-                            val result = CsPrinter.printText_FullParm(
-                                    string + "",
-                                    0, directionValue, 1, alignmentValue, false, false
-                            )
-                        }
-                    } else {
-                        if (Build.VERSION.SDK_INT <= 29) {
-                            CsPrinter.printText_FullParm(
-                                    string,
-                                    0,
-                                    directionValue,
-                                    1,
-                                    0,
-                                    false,
-                                    false
-                            )
-                            Log.e("CsPrinter Text", CsPrinter.getPrinterStatus().toString() + "")
-                        } else {
-                            CsPrinterQ.printText_FullParm(
-                                    string,
-                                    0,
-                                    directionValue,
-                                    1,
-                                    0,
-                                    false,
-                                    false
-                            )
-                        }
-                    }
-                    Log.e("Body Text", string)
-                } catch (ex: java.lang.Exception) {
-                    Log.e("Rey muzmail000 MP3_Plus", ex.toString() + "")
-                }
-            }
-
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
-                AidlUtil.getInstance()
-                        .printText(string, 24F, false, false, Constant.isArabicPrintAllowed)
-            } catch (ex: java.lang.Exception) {
-                Log.e("Rey Exception Mobiwire", ex.toString() + "")
-            }
-
-            "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
-
-                mIminPrintUtils!!.setAlignment(0)
-                mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
-                mIminPrintUtils?.setTextSize(22)
-                mIminPrintUtils?.printText(string)
-                mIminPrintUtils?.printAndLineFeed()
-                mIminPrintUtils?.printAndFeedPaper(50)
-//                mIminPrintUtils?.partialCut()
-
-            }
-        }
-    }
-
     fun checkIminPrinter() {
         if (!Build.MANUFACTURER.equals("neostra")) {
             return
@@ -649,7 +455,7 @@ class PrintingMethods {
                 }
 
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
-                    val alignment: kotlin.Int = if (textAlign == 0) {
+                    val alignment = if (textAlign == 0) {
                          (if (Constant.isArabicPrintAllowed) 2 else 0)
                     } else textAlign
                     if (size == 1) AidlUtil.getInstance()
@@ -779,7 +585,7 @@ class PrintingMethods {
             }
 
             "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
-                AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, false)
+                AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, 0)
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
