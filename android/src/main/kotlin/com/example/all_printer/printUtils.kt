@@ -14,6 +14,7 @@ import android.util.Log
 import com.example.all_printer.SunmiRestaurant.AidlUtil
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
+import com.imin.library.IminSDKManager
 import com.imin.library.SystemPropManager
 import com.imin.printerlib.IminPrintUtils
 import com.mobiiot.androidqapi.api.CsDevice
@@ -469,7 +470,7 @@ class PrintingMethods {
 
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
                     Log.e("Printtt", "$size string:$string")
-                    mIminPrintUtils!!.setAlignment(1)
+                    mIminPrintUtils!!.setAlignment(textAlign)
                     mIminPrintUtils?.setTextSize(26)
                     mIminPrintUtils?.setTextStyle(Typeface.BOLD)
                     mIminPrintUtils?.printText(
@@ -480,7 +481,7 @@ class PrintingMethods {
                     )
                 } else {
                     Log.e("Printtt", size.toString() + "")
-                    mIminPrintUtils!!.setAlignment(0)
+                    mIminPrintUtils!!.setAlignment(textAlign)
                     mIminPrintUtils?.setTextSize(22)
                     mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
                     mIminPrintUtils?.printText(
@@ -614,7 +615,23 @@ class PrintingMethods {
         }
     }
 
-
+    fun openDrawer() {
+        try {
+            Log.e("Constant.posType", Constant.posType.toString() + " ")
+            when (Constant.posType) {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s" -> try {
+                    AidlUtil.woyouService.openDrawer(null)
+                } catch (ex: java.lang.Exception) {
+                    Log.e("Sunmi Exception Drawer", ex.toString() + "")
+                }
+                "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
+                    IminSDKManager.opencashBox()
+                }
+            }
+        } catch (ex: java.lang.Exception) {
+            Log.e("10 Exception OpenDrawer", ex.toString() + "")
+        }
+    }
     fun printReyBitmap(string: String) {
         Log.d("printReyBitmap", "called")
         checkIminPrinter()
