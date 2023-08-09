@@ -170,6 +170,13 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.success("${e.message}");
                 }
             }
+            "openDrawer" -> {
+                try {
+                    result.success(printerObject?.openDrawer())
+                } catch (e: Exception) {
+                    result.success("${e.message}");
+                }
+            }
             else -> {
                 result.notImplemented()
             }
