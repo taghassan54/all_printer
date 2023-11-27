@@ -103,7 +103,7 @@ print("Error : ${e.toString()}");
 
     bool isDone = await _allPrinterPlugin.download(
         dio,
-        "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
+        "https://www.altkamul.net/content/merchants/$merchantId/$merchantId/logo.bmp",
         fullPath);
 
     await getInvoice();
