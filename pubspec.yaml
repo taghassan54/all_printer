@@ -10,6 +10,7 @@ dependencies:
   logger:
   path_provider:
   dio:
+  flutter_usb_printer:
 
 
 dev_dependencies:

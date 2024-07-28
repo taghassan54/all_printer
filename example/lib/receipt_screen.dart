@@ -12,18 +12,14 @@ import 'package:path_provider/path_provider.dart';
 
 class ReceiptScreen extends StatelessWidget {
 
-  final int orderId;
   final allPrinterPlugin;
   final bool isReprint;
-  final double transactionClaimAmount;
 
 
   ReceiptScreen(
       {super.key,
 
-      required this.orderId,
 required this.allPrinterPlugin,
-      required this.transactionClaimAmount,
 
       this.isReprint = false}) {
     // Future.delayed(
@@ -50,21 +46,17 @@ required this.allPrinterPlugin,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Image.network("https://raw.githubusercontent.com/taghassan54/printer/main/printing.bmp",width: MediaQuery.of(context).size.width*0.9,),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
-                  const TextRowDisplayWidget(value: "Text", textKey: "Test"),
+                  const Text("AED 45.00",style: TextStyle(fontSize: 22,fontWeight: ui.FontWeight.w600,),textAlign: TextAlign.center,),
+                  const TextRowDisplayWidget(value: "رقم الايصال", textKey: "20-292345"),
+                  const TextRowDisplayWidget(value: "التاريخ", textKey: "19/08/2014"),
+                  const TextRowDisplayWidget(value: "الموظف ", textKey: "Taj Eldeen"),
+                  const TextRowDisplayWidget(value: "نقطة بيع", textKey: "كاشير 10"),
+                  const TextRowDisplayWidget(value: "نوع الطلب", textKey: "توصيل"),
+                  const TextRowDisplayWidget(value: "منتج", textKey: "سعر"),
                   const TextRowDisplayWidget(value: "Text", textKey: "Test"),
   
                   Image.network("https://raw.githubusercontent.com/taghassan54/printer/main/printing.bmp",width: MediaQuery.of(context).size.width*0.9,),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Text(DateTime.now().toIso8601String(),style: const TextStyle(fontWeight: FontWeight.w600),)
 
                 ],
@@ -99,8 +91,8 @@ class TextRowDisplayWidget extends StatelessWidget {
         Text(
           value,
           style:const TextStyle(
-            fontSize: 17.0,
-            fontWeight: FontWeight.w500,
+            fontSize: 19.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],

@@ -5,6 +5,8 @@ import 'package:all_printer/utils/screen_shot.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_usb_printer/flutter_usb_printer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
@@ -93,6 +95,18 @@ class AllPrinter {
   }
 
   GlobalKey<OverRepaintBoundaryState> globalKey = GlobalKey<OverRepaintBoundaryState>();
+  FlutterUsbPrinter flutterUsbPrinter = FlutterUsbPrinter();
+
+  connect(int vendorId, int productId) async {
+    bool? returned = false;
+    try {
+      returned = await flutterUsbPrinter.connect(vendorId, productId);
+      AppLogger.logInfo("returned $returned");
+    } on PlatformException {
+      //response = 'Failed to get platform version.';
+    }
+    return returned;
+  }
 
   printScreen({bool? openCashBox=false,bool? runPrintReyFinish=false}) async {
     try {
@@ -121,7 +135,7 @@ class AllPrinter {
 
       if(runPrintReyFinish==true)
       {
-       Future.delayed(const Duration(milliseconds: 1500),()async {
+       Future.delayed(const Duration(milliseconds: 800),()async {
          await printReyFinish();
        },);
       }

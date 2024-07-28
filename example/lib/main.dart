@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
         invoice = {
           "$index": "The Quick Brown fox jumped over The Lazy Dog",
           "${++index}": "hello ",
-          "${++index}": "السلام عليكم ورحمة الله",
+          // "${++index}": "السلام عليكم ورحمة الله",
           "${++index}": "Date:2022-01-30 10:25:35",
           "${++index}": "Name: Altkamul Printer Test",
           "${++index}": "Merchent ID: $merchantId",
@@ -58,9 +58,9 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "Car No: 1001k",
           "${++index}": "Customer No: 971512345678",
           "${++index}": "******************************",
-          "${++index}": "size:1",
+          "${++index}": "size:2",
           "${++index}": "Tax Invoice",
-          "${++index}": "size:0",
+          "${++index}": "size:1",
           "${++index}": "******************************",
           "${++index}": "Title: Exterir Wash Small Car",
           "${++index}": "service: Wash",
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "-------------------------------",
           "${++index}": "Total: 71.00 AED",
           "${++index}": "******************************",
-          "${++index}": "نص تاني بالعربي",
+          // "${++index}": "نص تاني بالعربي",
           "${++index}": "******************************",
           "${++index}": "qrCode:This is QrCode",
           "${++index}": "******************************",
@@ -355,5 +355,5 @@ class _MyAppState extends State<MyApp> {
   );
 
 
-  invoiceScreen() =>ReceiptScreen(orderId: 67839025, transactionClaimAmount: 0,allPrinterPlugin: _allPrinterPlugin,);
+  invoiceScreen() =>ReceiptScreen(allPrinterPlugin: _allPrinterPlugin,);
 }

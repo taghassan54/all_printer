@@ -1384,8 +1384,11 @@ class PrintingMethods {
 
 //        CsOperation.screenShot()
 
+    if(Constant.posType==="rk3568_r"){
         var information = CsDevice.getDeviceInformation();
         Log.d("getDeviceInformation", "${information}")
+    }
+
 
     }
 
