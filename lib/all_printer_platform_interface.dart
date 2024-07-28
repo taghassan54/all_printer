@@ -34,11 +34,11 @@ abstract class AllPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> print(dynamic invoice){
+  Future<String?> print(dynamic invoice,int? size,int? alignment,int? textDirection,String? logoPath){
     throw UnimplementedError('print() has not been implemented.');
   }
 
-  Future<String?> printLine(String line){
+  Future<String?> printLine(String line,int? size,int?alignment,int?textDirection){
     throw UnimplementedError('printLine() has not been implemented.');
   }
 
@@ -48,6 +48,14 @@ abstract class AllPrinterPlatform extends PlatformInterface {
   Future<String?> getDeviceSerial(){
     throw UnimplementedError('getDeviceSerial() has not been implemented.');
   }
+
+  Future<String?> paperCut(){
+    throw UnimplementedError('paperCut() has not been implemented.');
+  }
+  Future<String?> printCashBox(){
+    throw UnimplementedError('printCashBox() has not been implemented.');
+  }
+
   Future download(Dio dio, String url, String savePath) async {
     throw UnimplementedError('download() has not been implemented.');
   }
@@ -60,12 +68,20 @@ abstract class AllPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('getDownloadPath() has not been implemented.');
   }
 
+  Future<String> getExternalDocumentPath({String? folder})async {
+    throw UnimplementedError('getExternalDocumentPath() has not been implemented.');
+  }
+
   Future printFinish() {
     throw UnimplementedError('printFinish() has not been implemented.');
   }
 
   Future<String?> printQrCode(String? qrData) {
     throw UnimplementedError('printQrCode() has not been implemented.');
+  }
+
+  Future<String?> printBarcode(String? qrData) {
+    throw UnimplementedError('printBarcode() has not been implemented.');
   }
 
 }

@@ -13,7 +13,7 @@ class MockAllPrinterPlatform
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
-  Future<String?> print(dynamic invoice) {
+  Future<String?> print(dynamic invoice,int?size,int?alignment,int?textDirection,String? logoPath) {
     throw UnimplementedError();
   }
 
@@ -42,7 +42,7 @@ class MockAllPrinterPlatform
   }
 
   @override
-  Future<String?> printLine(String line) {
+  Future<String?> printLine(String line,int?size,int?alignment,int?textDirection) {
     throw UnimplementedError();
   }
 
@@ -61,6 +61,29 @@ class MockAllPrinterPlatform
   @override
   Future<String?> getDeviceSerial() {
     // TODO: implement getDeviceSerial
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getExternalDocumentPath({String? folder}) {
+    // TODO: implement getExternalDocumentPath
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> printBarcode(String? qrData) {
+    // TODO: implement printBarcode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> paperCut() {
+    // TODO: implement paperCut
+    throw UnimplementedError();
+  }
+  @override
+  Future<String?> printCashBox() {
+    // TODO: implement paperCut
     throw UnimplementedError();
   }
 }

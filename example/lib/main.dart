@@ -1,4 +1,6 @@
 import 'package:all_printer/models/InvoiceListModel.dart';
+import 'package:all_printer/utils/logger.dart';
+import 'package:all_printer_example/receipt_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -41,8 +43,8 @@ class _MyAppState extends State<MyApp> {
     //
     try {
       // var response = await Dio().get('http://213.159.5.155:410/invoice.json');
-var index =0 ;
-      setState((){
+      var index = 0;
+      setState(() {
         invoice = {
           "$index": "The Quick Brown fox jumped over The Lazy Dog",
           "${++index}": "hello ",
@@ -56,9 +58,9 @@ var index =0 ;
           "${++index}": "Car No: 1001k",
           "${++index}": "Customer No: 971512345678",
           "${++index}": "******************************",
-          "${++index}": "size:2",
-          "${++index}": "Tax Invoice",
           "${++index}": "size:1",
+          "${++index}": "Tax Invoice",
+          "${++index}": "size:0",
           "${++index}": "******************************",
           "${++index}": "Title: Exterir Wash Small Car",
           "${++index}": "service: Wash",
@@ -72,13 +74,15 @@ var index =0 ;
           "${++index}": "******************************",
           "${++index}": "نص تاني بالعربي",
           "${++index}": "******************************",
+          "${++index}": "qrCode:This is QrCode",
+          "${++index}": "******************************",
           "${++index}": "City: Dubai UAE Call Us : 05123456789",
           "${++index}": "-------------------------------",
           "${++index}": "Thanks you for try our Flutter base POS"
         };
       });
     } catch (e) {
-print("Error : ${e.toString()}");
+      print("Error : ${e.toString()}");
     }
     //
     //
@@ -96,36 +100,48 @@ print("Error : ${e.toString()}");
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-
     String platformVersion = 'starting ... ';
 
-    String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
+    String fullPath =
+        await _allPrinterPlugin.getExternalDocumentPath(folder: merchantId);
 
     bool isDone = await _allPrinterPlugin.download(
         dio,
-        "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
+        "https://raw.githubusercontent.com/taghassan54/printer/main/printing.bmp",
         fullPath);
 
     await getInvoice();
-    invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
 
     if (isDone) {
-      invoice['logoPath'] = fullPath;
+      print("fullPath $fullPath");
+      // invoice['logoPath'] = fullPath;
+      // invoice['logoPath'] = fullPath;
+
       // platformVersion =
       //     await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
 
+    // platformVersion = await _allPrinterPlugin.printSingleLine(
+    //     line: "this normal text !",
+    //     textDirection: 0,
+    //     alignment: 0,
+    //     size: 0) ??
+    //     '';
+    // await _allPrinterPlugin.printQrCode(qrData: "data");
+    //
+    // await _allPrinterPlugin.printBarcode(qrData: "123456789000798");
 
 
-      platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
+    platformVersion = await _allPrinterPlugin.print(
+            invoice: invoice,
+            textDirection: 0,
+            alignment: 0,
+            size: 1,
+            logoPath: fullPath) ??
+        '';
 
 
-    platformVersion =
-        await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
-            '';
-    _allPrinterPlugin.printQrCode(qrData: "data");
-
-    _allPrinterPlugin.printReyFinish();
+    await _allPrinterPlugin.printReyFinish();
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -137,82 +153,36 @@ print("Error : ${e.toString()}");
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+    var screenWidth=MediaQuery.of(context).size.width;
+    var screenHeight=MediaQuery.of(context).size.height;
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title:  Text('Plugin example app'),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         // floatingActionButton: FloatingActionButton(
         //     onPressed: () => initPlatformState(),
         //     child: const Icon(Icons.print)),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(15),
+        bottomNavigationBar: Text('print result: $_platformVersion\n'),
+        body: screenWidth>700? Row(
+          children: [
+
+            SizedBox(width: screenWidth*0.3,child: invoiceScreen(),),
+            SizedBox(width: screenWidth*0.7,child: printerTestButtons(),)
+          ],
+        ) : SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: Text('print result: $_platformVersion\n'),
-              ),
-              ElevatedButton(
-                onPressed: () => initPlatformState(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child:
-                      Text("Print Full invoice", textAlign: TextAlign.center),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => printText(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text("Print Text", textAlign: TextAlign.center),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => printTextAr(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text("Print Arabic Text", textAlign: TextAlign.center),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => printImage(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text("Print Image", textAlign: TextAlign.center),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => printQrCode(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text("Print QrCode", textAlign: TextAlign.center),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => _allPrinterPlugin.printReyFinish(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text("Print Finish", textAlign: TextAlign.center),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => getPlatformVersion(),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text("Check Platform Version",
-                      textAlign: TextAlign.center),
-                ),
-              )
+              SizedBox(height: screenHeight*0.4,child: invoiceScreen(),),
+              SizedBox(height : screenHeight*0.4,child: printerTestButtons(),)
             ],
           ),
-        ),
+        )
       ),
     );
   }
@@ -221,8 +191,7 @@ print("Error : ${e.toString()}");
     String platformVersion = 'starting ... ';
     await getInvoice();
     platformVersion = await _allPrinterPlugin.printSingleLine(
-            line:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.") ??
+            line: "Lorem ipsum.", size: 2, alignment: 2, textDirection: 2) ??
         '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
@@ -234,8 +203,7 @@ print("Error : ${e.toString()}");
     String platformVersion = 'starting ... ';
     await getInvoice();
     platformVersion = await _allPrinterPlugin.printSingleLine(
-        line:
-        """ هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص. إن كنت تريد أن تستخدم نص لوريم إيبسوم ما، عليك أن تتحقق أولاً أن ليس هناك أي كلمات أو عبارات محرجة أو غير لائقة مخبأة في هذا النص. بينما تعمل جميع مولّدات نصوص لوريم إيبسوم على الإنترنت على إعادة تكرار مقاطع من نص لوريم إيبسوم نفسه عدة مرات بما تتطلبه الحاجة، يقوم مولّدنا هذا باستخدام كلمات من قاموس يحوي على أكثر من 200 كلمة لا تينية، مضاف إليها مجموعة من الجمل النموذجية، لتكوين نص لوريم إيبسوم ذو شكل منطقي قريب إلى النص الحقيقي. وبالتالي يكون النص الناتح خالي من التكرار، أو أي كلمات أو عبارات غير لائقة أو ما شابه. وهذا ما يجعله أول مولّد نص لوريم إيبسوم حقيقي على الإنترنت.  """) ??
+            line: """  مولّد نص لوريم إيبسوم حقيقي على الإنترنت.  """) ??
         '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
@@ -244,19 +212,19 @@ print("Error : ${e.toString()}");
   }
 
   printImage() async {
-
     String platformVersion = 'starting ... ';
 
-    String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
+    String fullPath =
+        await _allPrinterPlugin.getExternalDocumentPath(folder: merchantId);
+    // String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
 
     bool isDone = await _allPrinterPlugin.download(
         dio,
-        "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
+        "https://raw.githubusercontent.com/taghassan54/printer/main/printing.bmp",
         fullPath);
 
-
     if (isDone) {
-    // fullPath="storage/emulated/0/download/printing.bmp";
+      // fullPath="storage/emulated/0/download/printing.bmp";
       platformVersion =
           await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
       _allPrinterPlugin.printReyFinish();
@@ -276,8 +244,6 @@ print("Error : ${e.toString()}");
     });
   }
 
-
-
   getPlatformVersion() async {
     String? platformVersion = 'starting ... ';
     platformVersion = await _allPrinterPlugin.getPlatformVersion();
@@ -285,4 +251,109 @@ print("Error : ${e.toString()}");
       _platformVersion = platformVersion!;
     });
   }
+
+  printerTestButtons() =>GridView(
+    padding: const EdgeInsets.all(15),
+    gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: MediaQuery.of(context).size.width > 700 ?7:3,
+      crossAxisSpacing: 10.0,
+      mainAxisSpacing: 10.0,
+    ),
+    children: [
+
+
+      ElevatedButton(
+
+        onPressed: () => initPlatformState(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print Full invoice", textAlign: TextAlign.center),
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () => printText(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print Text", textAlign: TextAlign.center),
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () => printTextAr(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print Arabic Text", textAlign: TextAlign.center),
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () => printImage(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print Image", textAlign: TextAlign.center),
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () => printQrCode(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print QrCode", textAlign: TextAlign.center),
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          _allPrinterPlugin.printBarcode(codeData: "86881").then((value) {
+            _allPrinterPlugin.printBarcode(codeData: "31977"); 
+          },);
+
+        },
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print Barcode", textAlign: TextAlign.center),
+        ),
+      ),
+
+      ElevatedButton(
+        onPressed: () => _allPrinterPlugin.printReyFinish(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Print Finish", textAlign: TextAlign.center),
+        ),
+      ),
+
+      ElevatedButton(
+        onPressed: () => _allPrinterPlugin.paperCut(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("paperCut", textAlign: TextAlign.center),
+        ),
+      ),
+
+      ElevatedButton(
+        onPressed: () => _allPrinterPlugin.printCashBox(),
+        child: const SizedBox(
+          width: double.infinity,
+          child: Text("Open CashBox", textAlign: TextAlign.center),
+        ),
+      ),
+
+      ElevatedButton(
+        onPressed: () => _allPrinterPlugin.printScreen(runPrintReyFinish: true),
+        child: const SizedBox(
+          width: double.infinity,
+          child:
+          Text("print Screen", textAlign: TextAlign.center),
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () => getPlatformVersion(),
+        child: const SizedBox(
+          width: double.infinity,
+          child:
+          Text("Check Platform Version", textAlign: TextAlign.center),
+        ),
+      )
+    ],
+  );
+
+
+  invoiceScreen() =>ReceiptScreen(orderId: 67839025, transactionClaimAmount: 0,allPrinterPlugin: _allPrinterPlugin,);
 }

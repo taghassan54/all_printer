@@ -67,6 +67,11 @@ dependencies {
     implementation files('libs/cordova-2.2.0.jar')
     implementation files('libs/MobiIotApiAndroidQ.jar')
 
+    implementation files('libs/icod_3.1.6.jar')
+    implementation files('libs/icod_3.1.6.jar')
+
     implementation 'com.google.zxing:core:3.5.0'
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //
 }

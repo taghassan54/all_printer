@@ -1,7 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:all_printer/utils/logger.dart';
+import 'package:all_printer/utils/screen_shot.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
+
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:path_provider/path_provider.dart';
+
 
 import 'all_printer_platform_interface.dart';
 
@@ -14,16 +24,34 @@ class AllPrinter {
     return AllPrinterPlatform.instance.getDeviceSerial();
   }
 
+  Future<String?> paperCut() {
+    return AllPrinterPlatform.instance.paperCut();
+  }
+
+  Future<String?> printCashBox() {
+    return AllPrinterPlatform.instance.printCashBox();
+  }
+
   Future<String?> printImage({required String imagePath}) {
-    return AllPrinterPlatform.instance.printImage(imagePath);
+    return  AllPrinterPlatform.instance.printImage(imagePath);
   }
 
-  Future<String?> print({required dynamic invoice}) {
-    return AllPrinterPlatform.instance.print(invoice);
+  Future<String?> print({required dynamic invoice,int? size=1,int? alignment=1,int? textDirection=1,String? logoPath}) {
+
+    return AllPrinterPlatform.instance.print(invoice,size,alignment,textDirection,logoPath);
   }
 
-  Future<String?> printSingleLine({required String line}) {
-    return AllPrinterPlatform.instance.printLine(line);
+  /// printSingleLine
+  /// @funParameter Does something fun
+  /// 	- String (text to print)
+  /// 	- int(size of text)[1-5]
+  /// 	- int(direction of text)[1-3]
+  /// 	- int(font of text)[1-5]
+  /// 	- int(alignement of text)[1-3]
+  /// 	- boolean(true for bold text, else false)
+  /// 	- boolean(true for underline text, else false)
+  Future<String?> printSingleLine({required String line,int? size=1,int?alignment=1,int?textDirection=1}) {
+    return AllPrinterPlatform.instance.printLine(line,size,alignment,textDirection);
   }
 
   Future printReyFinish() {
@@ -53,7 +81,60 @@ class AllPrinter {
     return await AllPrinterPlatform.instance.getDownloadPath(uniqueId);
   }
 
+  Future<String> getExternalDocumentPath({String? folder}) async {
+    return await AllPrinterPlatform.instance.getExternalDocumentPath(folder: folder);
+  }
+
   Future<String?> printQrCode({required String? qrData}) async {
     return await AllPrinterPlatform.instance.printQrCode(qrData);
   }
+  Future<String?> printBarcode({required String? codeData}) async {
+    return await AllPrinterPlatform.instance.printBarcode(codeData);
+  }
+
+  GlobalKey<OverRepaintBoundaryState> globalKey = GlobalKey<OverRepaintBoundaryState>();
+
+  printScreen({bool? openCashBox=false,bool? runPrintReyFinish=false}) async {
+    try {
+      var renderObject =
+      globalKey.currentContext?.findRenderObject();
+
+      RenderRepaintBoundary? boundary = renderObject as RenderRepaintBoundary?;
+      ui.Image captureImage = await boundary!.toImage(pixelRatio: 2);
+
+      ByteData? byteData =
+      await captureImage.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      final directory = await getApplicationDocumentsDirectory();
+      final imagePath = await File('${directory.path}/image.png').create();
+      await imagePath.writeAsBytes(pngBytes);
+
+      AppLogger.logInfo("imagePath $imagePath");
+      // showDialog(builder: (context) =>  AlertDialog(content: SizedBox(width: 1000,child: Image.memory(pngBytes),),), context: context ,);
+      // return ;
+
+      await printImage(imagePath: imagePath.path);
+      if (openCashBox==true) {
+        await printCashBox();
+      }
+
+      if(runPrintReyFinish==true)
+      {
+       Future.delayed(const Duration(milliseconds: 1500),()async {
+         await printReyFinish();
+       },);
+      }
+
+
+    } catch (e) {
+      // Future.delayed(
+      //   const Duration(seconds: 1),
+      //   () => printScreen(),
+      // );
+    }
+  }
+
+
+
 }
